@@ -1,0 +1,50 @@
+----------------------------------------------------------------------------------------------------
+-  ENG                         
+----------------------------------------------------------------------------------------------------
+CreatePacket(packetName, packetSub) -> create packet for send main
+SetDwordPacket(packetName, number) -> set value dword
+GetDwordPacket(packetName, position) -> get value dword
+SetWordPacket(packetName, number) -> set value word
+GetWordPacket(packetName, position) -> get value word
+SetBytePacket(packetName, number) -> set value byte
+GetBytePacket(packetName, position) -> get value byte
+SetCharPacket(packetName, string) -> set a string with a maximum of 10 characters
+GetCharPacket(packetName, position) -> get string (10 characters)
+SetCharPacketLength(packetName, string, length) -> set a string the size you set
+GetCharPacketLength(packetName, position, length) -> get a string the size you set
+SendPacket(packetName, aIndex) -> send packet for player
+ClearPacket(packetName) -> always when you create a packet you need clear!
+
+----------------------------------------------------------------------------------------------------
+-  POR                         
+----------------------------------------------------------------------------------------------------
+CreatePacket(packetName, packetSub) -> cria o pacote para enviar
+SetDwordPacket(packetName, number) -> adiciona um dword no pacote
+GetDwordPacket(packetName, position) -> lê um dword do pacote
+SetWordPacket(packetName, number) -> adiciona um word no pacote
+GetWordPacket(packetName, position) -> lê um word do pacote
+SetBytePacket(packetName, number) -> adiciona um byte no pacote
+GetBytePacket(packetName, position) -> lê um byte do pacote
+SetCharPacket(packetName, string) -> adiciona uma string de até 10 caracteres
+GetCharPacket(packetName, position) -> lê a string (10 caracteres)
+SetCharPacketLength(packetName, string, length) -> adiciona uma string com tamanho fixo (length)
+GetCharPacketLength(packetName, position, length) -> lê uma string com tamanho fixo (length)
+SendPacket(packetName, aIndex) -> envia o pacote para o jogador
+ClearPacket(packetName) -> sempre limpe o pacote depois de usar
+
+----------------------------------------------------------------------------------------------------
+-  ESP                         
+----------------------------------------------------------------------------------------------------
+CreatePacket(packetName, packetSub) -> crea el paquete para enviar
+SetDwordPacket(packetName, number) -> agrega un dword al paquete
+GetDwordPacket(packetName, position) -> lee un dword del paquete
+SetWordPacket(packetName, number) -> agrega un word al paquete
+GetWordPacket(packetName, position) -> lee un word del paquete
+SetBytePacket(packetName, number) -> agrega un byte al paquete
+GetBytePacket(packetName, position) -> lee un byte del paquete
+SetCharPacket(packetName, string) -> agrega una cadena de hasta 10 caracteres
+GetCharPacket(packetName, position) -> lee la cadena (10 caracteres)
+SetCharPacketLength(packetName, string, length) -> agrega una cadena con tamaño fijo (length)
+GetCharPacketLength(packetName, position, length) -> lee una cadena con tamaño fijo (length)
+SendPacket(packetName, aIndex) -> envía el paquete al jugador
+ClearPacket(packetName) -> siempre limpia el paquete después de usar

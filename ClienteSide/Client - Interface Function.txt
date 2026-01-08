@@ -1,0 +1,236 @@
+----------------------------------------------------------------------------------------------------
+-  ENG                         
+----------------------------------------------------------------------------------------------------
+OpenBrowser(link) -> open a link in browser
+
+RenderImage(imageID, x, y, width, height) -> render image
+RenderImage2(texture, x, y, w, h, u, v, uWidth, vHeight, scale, startScale, alpha) -> render bitmap with UV/scale/alpha
+RenderImage3(texture, x, y, w, h, u, v, uWidth, vHeight, alpha) -> render image scale
+RenderImageScale(texture, x, y, w, h, u, v, uWidth, vHeight, alpha) -> render image scale (same as RenderImage3)
+RenderImageAuto(texture, x, y, w, h) -> render image auto scale
+
+RenderText(x, y, text, width, sort) -> render text (color set with SetTextColor/SetTextBg)
+RenderText2(x, y, text, width, sort) -> render text (wrapper)
+RenderText3(x, y, text, sort) -> render text (wrapper)
+RenderText4(x, y, text, sort) -> same as RenderText3
+RenderText5(x, y, text, width, sort) -> same as RenderText2
+
+SetFontType(type) -> set font type: 1 = Bold, 2 = Big, 0 = normal, 3 = Fix
+SetTextBg(r, g, b, a) -> set text bg color (RGBA)
+SetTextColor(r, g, b, a) -> set text color (RGBA)
+GetTextPosY(font, text, y, height) -> return centered Y for text
+
+CheckWindowOpen(windowID) -> return 1 if window is open
+CloseWindow(windowID) -> close window
+OpenWindow(windowID) -> open window
+
+EnableAlphaTest() -> enable alpha test
+DisableAlphaBlend() -> disable alpha blend
+SetBlend() -> EnableAlphaTest(true)
+GLSwitchBlend() -> enable alpha blend
+GLSwitch() -> disable alpha blend
+
+glColor3f(r, g, b) -> set OpenGL color
+glColor4f(r, g, b, a) -> set OpenGL color RGBA
+
+DrawBar(x, y, width, height) -> draw a colored rect/bar
+EndDrawBar() -> end DrawBar
+
+MousePosX() -> return mouse position X
+MousePosY() -> return mouse position Y
+ResetMouseL() -> reset left mouse flags
+ResetMouseR() -> reset right mouse flags
+ResetMouseM() -> reset middle mouse flags
+
+CheckRepeatKey(key) -> return 1 if key is repeat
+CheckPressedKey(key) -> return 1 if key is pressed
+CheckReleasedKey(key) -> return 1 if key is released
+
+CheckClickClient() -> return 1 if left click is active
+DisableClickClient() -> disable clicks (interfaceLock=1) and reset mouse
+
+WindowGetWidth() -> return window width (GetWindowsX)
+WindowGetWidthAdd() -> return PositionX_In_The_Mid(0.0)
+WindowGetHeight() -> return window height (GetWindowsY)
+WindowGetHeighthAdd() -> return PositionY_In_The_Mid(0.0)
+GetWideX() -> return PositionX_In_The_Mid(0.0)
+
+GetImageWidth(texture) -> return real width from bitmap
+GetImageHeight(texture) -> return real height from bitmap
+
+ShowDescriptionComplete(x, y, itemIndex, level, dur, op1, op2, op3, exc, ancient, joh, socket, sock1, sock2, sock3, sock4, sock5) -> render item description complete
+ShowItemDescription(x, y, itemIndex, level, op1, op2, op3, dur, exc, ancient) -> render item description
+
+CreateItem(x, y, width, height, itemType, level, option1, extOption) -> render 3D item on screen/interface
+DrawTooltip(x, y, text) -> draw simple tooltip text
+
+SendMessageClient(text) -> send message in client chat
+
+PlaySound(id) -> play sound
+StopSound(id) -> stop sound
+
+LockPlayerWalk() -> lock player walk
+UnlockPlayerWalk() -> unlock player walk
+
+SetLockInterfaces() -> lock interface click (ErrorMessage=1)
+SetUnlockInterfaces() -> unlock interface click (ErrorMessage=0)
+
+GetLanguage() -> return selected language string (Por/Eng/Spn)
+
+----------------------------------------------------------------------------------------------------
+-  POR
+----------------------------------------------------------------------------------------------------
+OpenBrowser(link) -> abre um link no navegador
+
+RenderImage(imageID, x, y, width, height) -> renderiza imagem
+RenderImage2(texture, x, y, w, h, u, v, uWidth, vHeight, scale, startScale, alpha) -> renderiza bitmap com UV/scale/alpha
+RenderImage3(texture, x, y, w, h, u, v, uWidth, vHeight, alpha) -> renderiza imagem com scale
+RenderImageScale(texture, x, y, w, h, u, v, uWidth, vHeight, alpha) -> renderiza imagem com scale (mesma do RenderImage3)
+RenderImageAuto(texture, x, y, w, h) -> renderiza imagem com auto scale
+
+RenderText(x, y, text, width, sort) -> renderiza texto (cor via SetTextColor/SetTextBg)
+RenderText2(x, y, text, width, sort) -> renderiza texto (wrapper)
+RenderText3(x, y, text, sort) -> renderiza texto (wrapper)
+RenderText4(x, y, text, sort) -> igual ao RenderText3
+RenderText5(x, y, text, width, sort) -> igual ao RenderText2
+
+SetFontType(type) -> define tipo de fonte: 1 = Bold, 2 = Big, 0 = normal, 3 = Fix
+SetTextBg(r, g, b, a) -> define cor do fundo do texto (RGBA)
+SetTextColor(r, g, b, a) -> define cor do texto (RGBA)
+GetTextPosY(font, text, y, height) -> retorna Y centralizado para o texto
+
+CheckWindowOpen(windowID) -> retorna 1 se a janela estiver aberta
+CloseWindow(windowID) -> fecha a janela
+OpenWindow(windowID) -> abre a janela
+
+EnableAlphaTest() -> habilita alpha test
+DisableAlphaBlend() -> desabilita alpha blend
+SetBlend() -> EnableAlphaTest(true)
+GLSwitchBlend() -> habilita alpha blend
+GLSwitch() -> desabilita alpha blend
+
+glColor3f(r, g, b) -> define cor OpenGL
+glColor4f(r, g, b, a) -> define cor OpenGL RGBA
+
+DrawBar(x, y, width, height) -> desenha retângulo/barra colorida
+EndDrawBar() -> finaliza DrawBar
+
+MousePosX() -> retorna posição X do mouse
+MousePosY() -> retorna posição Y do mouse
+ResetMouseL() -> reseta flags do mouse esquerdo
+ResetMouseR() -> reseta flags do mouse direito
+ResetMouseM() -> reseta flags do mouse do meio
+
+CheckRepeatKey(key) -> retorna 1 se a tecla estiver em repeat
+CheckPressedKey(key) -> retorna 1 se a tecla foi pressionada
+CheckReleasedKey(key) -> retorna 1 se a tecla foi solta
+
+CheckClickClient() -> retorna 1 se o clique esquerdo estiver ativo
+DisableClickClient() -> desabilita cliques (interfaceLock=1) e reseta mouse
+
+WindowGetWidth() -> retorna largura da janela (GetWindowsX)
+WindowGetWidthAdd() -> retorna PositionX_In_The_Mid(0.0)
+WindowGetHeight() -> retorna altura da janela (GetWindowsY)
+WindowGetHeighthAdd() -> retorna PositionY_In_The_Mid(0.0)
+GetWideX() -> retorna PositionX_In_The_Mid(0.0)
+
+GetImageWidth(texture) -> retorna largura real do bitmap
+GetImageHeight(texture) -> retorna altura real do bitmap
+
+ShowDescriptionComplete(x, y, itemIndex, level, dur, op1, op2, op3, exc, ancient, joh, socket, sock1, sock2, sock3, sock4, sock5) -> renderiza descrição completa do item
+ShowItemDescription(x, y, itemIndex, level, op1, op2, op3, dur, exc, ancient) -> renderiza descrição do item
+
+CreateItem(x, y, width, height, itemType, level, option1, extOption) -> renderiza item 3D na tela/interface
+DrawTooltip(x, y, text) -> desenha tooltip simples de texto
+
+SendMessageClient(text) -> envia mensagem no chat do client
+
+PlaySound(id) -> toca som
+StopSound(id) -> para o som
+
+LockPlayerWalk() -> trava o movimento do player
+UnlockPlayerWalk() -> destrava o movimento do player
+
+SetLockInterfaces() -> trava clique na interface (ErrorMessage=1)
+SetUnlockInterfaces() -> destrava clique na interface (ErrorMessage=0)
+
+GetLanguage() -> retorna string do idioma selecionado (Por/Eng/Spn)
+
+----------------------------------------------------------------------------------------------------
+-  SPN
+----------------------------------------------------------------------------------------------------
+OpenBrowser(link) -> abre un enlace en el navegador
+
+RenderImage(imageID, x, y, width, height) -> renderiza imagen
+RenderImage2(texture, x, y, w, h, u, v, uWidth, vHeight, scale, startScale, alpha) -> renderiza bitmap con UV/scale/alpha
+RenderImage3(texture, x, y, w, h, u, v, uWidth, vHeight, alpha) -> renderiza imagen con scale
+RenderImageScale(texture, x, y, w, h, u, v, uWidth, vHeight, alpha) -> renderiza imagen con scale (igual que RenderImage3)
+RenderImageAuto(texture, x, y, w, h) -> renderiza imagen con auto scale
+
+RenderText(x, y, text, width, sort) -> renderiza texto (color con SetTextColor/SetTextBg)
+RenderText2(x, y, text, width, sort) -> renderiza texto (wrapper)
+RenderText3(x, y, text, sort) -> renderiza texto (wrapper)
+RenderText4(x, y, text, sort) -> igual que RenderText3
+RenderText5(x, y, text, width, sort) -> igual que RenderText2
+
+SetFontType(type) -> establece tipo de fuente: 1 = Bold, 2 = Big, 0 = normal, 3 = Fix
+SetTextBg(r, g, b, a) -> establece color de fondo del texto (RGBA)
+SetTextColor(r, g, b, a) -> establece color del texto (RGBA)
+GetTextPosY(font, text, y, height) -> devuelve Y centrado para el texto
+
+CheckWindowOpen(windowID) -> devuelve 1 si la ventana está abierta
+CloseWindow(windowID) -> cierra la ventana
+OpenWindow(windowID) -> abre la ventana
+
+EnableAlphaTest() -> habilita alpha test
+DisableAlphaBlend() -> deshabilita alpha blend
+SetBlend() -> EnableAlphaTest(true)
+GLSwitchBlend() -> habilita alpha blend
+GLSwitch() -> deshabilita alpha blend
+
+glColor3f(r, g, b) -> establece color OpenGL
+glColor4f(r, g, b, a) -> establece color OpenGL RGBA
+
+DrawBar(x, y, width, height) -> dibuja rectángulo/barra de color
+EndDrawBar() -> finaliza DrawBar
+
+MousePosX() -> devuelve posición X del mouse
+MousePosY() -> devuelve posición Y del mouse
+ResetMouseL() -> reinicia flags del mouse izquierdo
+ResetMouseR() -> reinicia flags del mouse derecho
+ResetMouseM() -> reinicia flags del mouse medio
+
+CheckRepeatKey(key) -> devuelve 1 si la tecla está en repeat
+CheckPressedKey(key) -> devuelve 1 si la tecla fue presionada
+CheckReleasedKey(key) -> devuelve 1 si la tecla fue soltada
+
+CheckClickClient() -> devuelve 1 si el click izquierdo está activo
+DisableClickClient() -> deshabilita clicks (interfaceLock=1) y reinicia mouse
+
+WindowGetWidth() -> devuelve ancho de la ventana (GetWindowsX)
+WindowGetWidthAdd() -> devuelve PositionX_In_The_Mid(0.0)
+WindowGetHeight() -> devuelve alto de la ventana (GetWindowsY)
+WindowGetHeighthAdd() -> devuelve PositionY_In_The_Mid(0.0)
+GetWideX() -> devuelve PositionX_In_The_Mid(0.0)
+
+GetImageWidth(texture) -> devuelve ancho real del bitmap
+GetImageHeight(texture) -> devuelve alto real del bitmap
+
+ShowDescriptionComplete(x, y, itemIndex, level, dur, op1, op2, op3, exc, ancient, joh, socket, sock1, sock2, sock3, sock4, sock5) -> renderiza descripción completa del ítem
+ShowItemDescription(x, y, itemIndex, level, op1, op2, op3, dur, exc, ancient) -> renderiza descripción del ítem
+
+CreateItem(x, y, width, height, itemType, level, option1, extOption) -> renderiza ítem 3D en la pantalla/interfaz
+DrawTooltip(x, y, text) -> dibuja tooltip simple de texto
+
+SendMessageClient(text) -> envía mensaje al chat del cliente
+
+PlaySound(id) -> reproduce sonido
+StopSound(id) -> detiene el sonido
+
+LockPlayerWalk() -> bloquea caminar del jugador
+UnlockPlayerWalk() -> desbloquea caminar del jugador
+
+SetLockInterfaces() -> bloquea click de interfaz (ErrorMessage=1)
+SetUnlockInterfaces() -> desbloquea click de interfaz (ErrorMessage=0)
+
+GetLanguage() -> devuelve string del idioma seleccionado (Por/Eng/Spn)

@@ -1,0 +1,1045 @@
+======================================
+=======  FUNCTIONS GAMESERVER  =======
+======================================
+
+================================================================================
+                                    LOG
+================================================================================
+
+LogAdd(string)
+  -> Log no GameServer (LOG_BLACK)
+
+LogAddLua(string)
+  -> Log no GameServer via LogAddLua (LOG_BLACK)
+
+LogAddC(type, string)
+  -> Log com cor/tipo:
+     1 = LOG_BLACK
+     2 = LOG_RED
+     3 = LOG_GREEN
+     4 = LOG_BLUE
+
+LogAddTD(string)
+  -> Log no GameServer (LOG_BLACK)
+
+================================================================================
+                                  MESSAGES
+================================================================================
+
+SendMessage(string, aIndex, type)
+  -> Envia notice para o jogador (GCNoticeSend)
+
+SendMessageGlobal(string, type)
+  -> Mensagem global para todos os jogadores (GCNoticeSendToAll)
+
+SendMessageAllServer(string, type)
+  -> Envia mensagem para todos os servidores via PostMessage
+
+MoneySend(aIndex)
+  -> Atualiza money do player no client (GCMoneySend)
+
+LevelUpSend(aIndex)
+  -> Atualiza info do personagem (GCLevelUpSend + GCNewCharacterInfoSend)
+
+PkLevelSend(aIndex, level)
+  -> Envia nível PK do jogador (GCPKLevelSend)
+
+GetIndex(name)
+  -> Retorna aIndex pelo nome do jogador
+  -> Retorno: int (-1 se não encontrado)
+
+NoticeUser(aIndex, type, msg)
+  -> Envia notice simples para jogador
+  -> Retorno: 1 se ok, 0 se falha
+
+NoticeGlobal(type, msg)
+  -> Envia notice global para todos
+  -> Retorno: 1
+
+ChatTargetSend(aIndex, text, monsterIndex)
+  -> Envia chat de NPC/Monster para jogador
+
+================================================================================
+                              TELEPORT / MAP
+================================================================================
+
+Teleport(aIndex, map, x, y)
+  -> Teleporta jogador para coordenadas específicas
+
+TeleportMap(aIndex, range)
+  -> Teleporta jogador para posição aleatória no mapa atual
+
+TeleportMapRange(aIndex, map, x, y, range)
+  -> Teleporta jogador para posição aleatória próxima às coordenadas
+
+================================================================================
+                                 MONSTERS
+================================================================================
+
+AddMonster(map)
+  -> Adiciona slot para monster no mapa
+  -> Retorno: int (index do objeto, -1 se falha)
+
+SetMonster(aIndex, monsterClass)
+  -> Define classe do monster no objeto
+
+gObjDel(aIndex)
+  -> Remove objeto do servidor
+
+gObjMonsterTopHitDamageUser(aIndex)
+  -> Retorna aIndex do jogador que mais causou dano no monster
+  -> Retorno: int (-1 se não encontrado)
+
+CreateMonsterEx(map, monsterClass, x, y)
+  -> Cria monster completo com validação de posição
+  -> Retorno: int (index do monster, -1 se falha)
+
+================================================================================
+                                  ITEMS
+================================================================================
+
+ItemSerialCreate(aIndex, map, x, y, itemIndex, level, dur, op1, op2, op3, exc)
+  -> Cria item no mapa com opções básicas
+
+ItemSerialCreateComplete(aIndex, map, x, y, itemIndex, level, dur, op1, op2, op3, ownerIndex, exc, ancient, joh, timer)
+  -> Cria item completo com todas as opções (ancient, JOH, timer)
+
+CreateItemInventory(aIndex, itemIndex, level, op1, op2, op3, exc, ancient, joh, sockBonus, sock1, sock2, sock3, sock4, sock5, timer)
+  -> Cria item direto no inventário com sockets
+
+CreateItemInventory2(aIndex, itemIndex, level, op1, op2, op3, exc, ancient, joh, socket, timer)
+  -> Cria item no inventário com quantidade de slots de socket
+
+CreateItemMap(aIndex, map, x, y, itemIndex, level, op1, op2, op3, exc, ancient, joh, socket, timer)
+  -> Cria item no mapa com opções completas
+
+CreateItemMapEx(aIndex, map, x, y, itemIndex, level, dur)
+  -> Cria item simples no mapa
+
+InventoryDeleteItem(aIndex, slot)
+  -> Remove item do slot do inventário (server-side)
+
+SendInventoryDeleteItem(aIndex, slot)
+  -> Remove item e notifica o client
+
+ItemListSend(aIndex)
+  -> Envia lista de itens do inventário para o client
+
+ItemListSendEx(aIndex)
+  -> Alias para ItemListSend
+
+================================================================================
+                                 WAREHOUSE
+================================================================================
+
+GetWarehouseList(aIndex, account)
+  -> Carrega warehouse da conta
+
+WarehouseOpen(aIndex, account)
+  -> Abre warehouse da conta
+  -> Retorno: 1 se ok
+
+WarehouseOpenGuild(aIndex, guildName)
+  -> Abre warehouse da guild
+  -> Retorno: 1 se ok
+
+WarehouseClose(aIndex)
+  -> Fecha warehouse
+  -> Retorno: 1 se ok
+
+WarehouseSave(aIndex)
+  -> Salva warehouse (normal ou guild)
+  -> Retorno: 1 se ok
+
+WarehouseStateSend(aIndex, state)
+  -> Envia estado do warehouse para client
+  -> Retorno: 1 se ok
+
+WarehouseMoneySend(aIndex, result, inventoryMoney, warehouseMoney)
+  -> Envia informação de dinheiro do warehouse
+  -> Retorno: 1 se ok
+
+WarehouseTax(level, lock)
+  -> Calcula taxa do warehouse
+  -> Retorno: int (valor da taxa)
+
+================================================================================
+                               USER (LEGADO)
+================================================================================
+
+CloseChar(aIndex, type)
+  -> Fecha personagem com tipo específico
+
+CalCharacter(aIndex)
+  -> Recalcula atributos do personagem
+
+SetBP(aIndex)
+  -> Recalcula BP (Stamina/AG)
+
+MakePreview(aIndex)
+  -> Recria preview do personagem (aparência)
+
+NextExpCalc(aIndex)
+  -> Recalcula experiência necessária
+
+RefreshCharacter(aIndex)
+  -> Atualiza informações do personagem no client
+
+UserDisconnect(aIndex)
+  -> Desconecta jogador
+
+gObjIsConnectedGP(aIndex)
+  -> Verifica se jogador está conectado e em jogo
+  -> Retorno: 1 se conectado, 0 se não
+
+GetMapObject(aIndex)
+  -> Retorna mapa atual do objeto
+  -> Retorno: int (map number)
+
+GetXObject(aIndex)
+  -> Retorna coordenada X do objeto
+  -> Retorno: int
+
+GetYObject(aIndex)
+  -> Retorna coordenada Y do objeto
+  -> Retorno: int
+
+GetNameObject(aIndex)
+  -> Retorna nome do objeto
+  -> Retorno: string
+
+GetAccountObject(aIndex)
+  -> Retorna conta do objeto
+  -> Retorno: string
+
+================================================================================
+                                  ATTACK
+================================================================================
+
+AttackCG(aIndex, targetIndex, action, dir)
+  -> Executa ataque do jogador
+  -> Retorno: 1 se ok
+
+IsValidAttackTarget(aIndex, targetIndex)
+  -> Verifica se alvo é válido para ataque
+  -> Retorno: 1 se válido
+
+DecreaseArrow(aIndex)
+  -> Diminui quantidade de flechas
+  -> Retorno: 1 se ok
+
+AttackDamageRaw(aIndex, targetIndex, skillIndex, send, flag, damage, count, combo)
+  -> Aplica dano físico/mágico direto
+  -> Parâmetros:
+     - skillIndex: índice da skill (0 para nenhuma)
+     - send: 1 para enviar ao client
+     - flag: flags de dano
+     - damage: valor do dano
+     - count: contador
+     - combo: 1 se é combo
+  -> Retorno: 1 se ok
+
+AttackDamageElementalRaw(aIndex, targetIndex, skillIndex, send, flag, damage, count, combo)
+  -> Aplica dano elemental direto
+  -> Retorno: 1 se ok
+
+GetPreviewDefense(aIndex)
+  -> Retorna defesa do personagem para preview
+  -> Retorno: int
+
+GetPreviewPhysiDamage(aIndex)
+  -> Retorna dano físico para preview
+  -> Retorno: table {minDamage, maxDamage, mulDamage, divDamage}
+
+GetPreviewMagicDamage(aIndex)
+  -> Retorna dano mágico para preview
+  -> Retorno: table {minDamage, maxDamage, mulDamage, divDamage, rate}
+
+GetPreviewCurseDamage(aIndex)
+  -> Retorna dano de curse para preview
+  -> Retorno: table {minDamage, maxDamage, mulDamage, divDamage, rate}
+
+================================================================================
+                                  QUEST
+================================================================================
+
+QuestInfoSend(aIndex)
+  -> Envia informações de quest para client
+  -> Retorno: 1 se ok
+
+QuestStateSend(aIndex, questIndex)
+  -> Envia estado da quest específica
+  -> Retorno: 1 se ok
+
+QuestKillCountSend(aIndex, questIndex)
+  -> Envia contagem de kills da quest
+  -> Retorno: 1 se ok
+
+QuestResultSend(aIndex, questIndex, questResult, questState)
+  -> Envia resultado da quest
+  -> Retorno: 1 se ok
+
+QuestRewardSend(aIndex, questReward, questAmount)
+  -> Envia recompensa da quest
+  -> Retorno: 1 se ok
+
+QuestSetState(aIndex, questIndex, questState)
+  -> Define estado da quest
+  -> Retorno: 1 se ok
+
+QuestGetState(aIndex, questIndex)
+  -> Obtém estado da quest
+  -> Retorno: int (0-3)
+
+QuestCheckState(aIndex, questIndex, questState)
+  -> Verifica se quest está no estado especificado
+  -> Retorno: 1 se igual, 0 se diferente
+
+================================================================================
+                                  TRADE
+================================================================================
+
+TradeRequest(aIndex, targetIndex)
+  -> Envia requisição de trade
+  -> Retorno: 1 se ok
+
+TradeResponse(aIndex, response)
+  -> Responde requisição de trade
+  -> Retorno: 1 se ok
+
+TradeSetMoney(aIndex, money) ou TradeSetMoney(aIndex, money, coin1, coin2, coin3)
+  -> Define dinheiro no trade (versão depende de TRADE_SYSTEM_COIN)
+  -> Retorno: 1 se ok
+
+TradeOk(aIndex, flag)
+  -> Confirma trade
+  -> Retorno: 1 se ok
+
+TradeCancel(aIndex)
+  -> Cancela trade
+  -> Retorno: 1 se ok
+
+TradeReset(aIndex)
+  -> Reseta trade
+  -> Retorno: 1 se ok
+
+================================================================================
+                             SCHEDULE MANAGER
+================================================================================
+
+ScheduleGetNext(schedules)
+  -> Obtém próximo horário agendado
+  -> Parâmetro: table de schedules
+     Cada schedule: {Year, Month, Day, Hour, Minute, Second, DayOfWeek}
+     Use -1 para curinga
+  -> Retorno: int (timestamp) ou 0 se não encontrado
+
+ScheduleGetRemainSeconds(schedules)
+  -> Obtém segundos restantes até próximo agendamento
+  -> Retorno: int (segundos)
+
+================================================================================
+                              CUSTOM QUEST
+================================================================================
+
+CustomQuestSend(aIndex)
+  -> Envia custom quest para jogador
+  -> Retorno: 1 se ok (requer GAMESERVER_CLIENTE_UPDATE >= 3)
+
+CustomQuestComplete(aIndex, npcIndex)
+  -> Completa custom quest
+  -> Retorno: 1 se ok
+
+GetCustomQuest(aIndex)
+  -> Obtém ID da custom quest atual
+  -> Retorno: int
+
+GetCustomQuestMonsterIndex(aIndex)
+  -> Obtém índice do monster da quest
+  -> Retorno: int (-1 se nenhum)
+
+GetCustomQuestMonsterRemain(aIndex)
+  -> Obtém quantidade restante de monsters
+  -> Retorno: int (-1 se nenhum)
+
+================================================================================
+                           PENTAGRAM SYSTEM
+================================================================================
+(Requer GAMESERVER_UPDATE >= 701)
+
+IsPentagramItem(itemIndex)
+  -> Verifica se é item de pentagram
+  -> Retorno: 1 se é
+
+IsPentagramJewel(itemIndex)
+  -> Verifica se é jewel de pentagram
+  -> Retorno: 1 se é
+
+PentagramCheckExchange(aIndex)
+  -> Verifica troca de pentagram
+  -> Retorno: 1 se ok
+
+PentagramCalc(aIndex, flag)
+  -> Calcula opções do pentagram
+  -> Retorno: 1 se ok
+
+PentagramCalcJewel(aIndex, flag)
+  -> Calcula opções das jewels
+  -> Retorno: 1 se ok
+
+PentagramInfoSend(aIndex, type)
+  -> Envia info do pentagram para client
+  -> Retorno: 1 se ok
+
+PentagramInfoSave(aIndex, type)
+  -> Salva info do pentagram
+  -> Retorno: 1 se ok
+
+================================================================================
+                              USER.CPP (CORE)
+================================================================================
+
+ObjIsConnected(aIndex)
+  -> Verifica se objeto está conectado
+  -> Retorno: 1 se conectado
+
+ObjCalcDistance(aIndex, targetIndex)
+  -> Calcula distância entre dois objetos
+  -> Retorno: int (distância, -1 se inválido)
+
+ObjMoveGate(aIndex, gate)
+  -> Move jogador para gate
+  -> Retorno: 1 se ok
+
+ObjTeleportMagicUse(aIndex, x, y)
+  -> Usa teleporte mágico
+  -> Retorno: 1 se ok
+
+ObjSetKillCount(aIndex, type)
+  -> Define contagem de kills
+  -> Retorno: 1 se ok
+
+ObjUserKill(aIndex)
+  -> Mata o jogador
+  -> Retorno: 1 se ok
+
+ObjCheckMaxMoney(aIndex, addMoney)
+  -> Verifica se pode adicionar dinheiro
+  -> Retorno: 1 se pode
+
+ObjCheckMaxTransfer(aIndex, type, addMoney)
+  -> Verifica limite de transferência
+  -> Retorno: 1 se pode
+
+InventoryTransactionBegin(aIndex)
+  -> Inicia transação de inventário
+  -> Retorno: 1 se ok
+
+InventoryTransactionCommit(aIndex)
+  -> Confirma transação de inventário
+  -> Retorno: 1 se ok
+
+InventoryTransactionRollback(aIndex)
+  -> Desfaz transação de inventário
+  -> Retorno: 1 se ok
+
+================================================================================
+                          OBJECT MANAGER (CORE)
+================================================================================
+
+ObjectManagerCharacterCalcAttribute(aIndex)
+  -> Recalcula todos os atributos
+  -> Retorno: 1 se ok
+
+ObjectManagerCharacterMakePreviewCharSet(aIndex)
+  -> Recria preview do personagem
+  -> Retorno: 1 se ok
+
+ObjectManagerCharacterCalcBP(aIndex)
+  -> Recalcula BP/AG
+  -> Retorno: 1 se ok
+
+ObjectManagerCharacterUpdateMapEffect(aIndex)
+  -> Atualiza efeitos do mapa
+  -> Retorno: 1 se ok
+
+ObjectManagerCharacterMapServerMove(aIndex, map, x, y)
+  -> Move para outro servidor de mapa
+  -> Retorno: 1 se ok
+
+ObjectManagerCharacterGameClose(aIndex)
+  -> Fecha jogo do personagem
+  -> Retorno: 1 se ok
+
+ObjectManagerCharacterGameCloseSet(aIndex, type)
+  -> Define fechamento do jogo
+  -> Retorno: 1 se ok
+
+ObjectManagerCharacterUsePotion(aIndex, slot)
+  -> Usa poção do slot
+  -> Retorno: 1 se ok
+
+ObjectManagerCharacterUsePortal(aIndex, slot)
+  -> Usa portal do slot
+  -> Retorno: 1 se ok
+
+ObjectManagerCharacterUseScroll(aIndex, slot)
+  -> Usa scroll do slot
+  -> Retorno: 1 se ok
+
+================================================================================
+                                 MESSAGE
+================================================================================
+
+GlobalText(index)
+  -> Retorna texto global pelo índice
+  -> Retorno: string
+
+================================================================================
+                               SERVER INFO
+================================================================================
+
+ServerInfoGetMaxLevel()
+  -> Retorna nível máximo do servidor
+  -> Retorno: int
+
+ServerInfoConvertLevel(level)
+  -> Converte nível
+  -> Retorno: int
+
+ServerInfoGetServerCode()
+  -> Retorna código do servidor
+  -> Retorno: int
+
+ServerInfoGetServerPort()
+  -> Retorna porta do servidor
+  -> Retorno: int
+
+ServerInfoGetCashShopSwitch()
+  -> Retorna se CashShop está ativo
+  -> Retorno: 1 se ativo
+
+ServerInfoGetTradeSwitch()
+  -> Retorna se Trade está ativo
+  -> Retorno: 1 se ativo
+
+ServerInfoGetDuelSwitch()
+  -> Retorna se Duel está ativo
+  -> Retorno: 1 se ativo
+
+ServerInfoGetOnlineRewardCoinDelay(coinType)
+  -> Retorna delay da recompensa online
+  -> coinType: 1, 2 ou 3
+  -> Retorno: int
+
+ServerInfoGetOnlineRewardCoinValue(coinType, accountLevel)
+  -> Retorna valor da recompensa online
+  -> accountLevel: 0-3
+  -> Retorno: int
+
+ServerInfoReloadBotInfo()
+  -> Recarrega informações de bots
+  -> Retorno: 1
+
+ServerInfoReloadAll()
+  -> Recarrega todas as configurações (PESADO!)
+  -> Retorno: 1
+
+ServerInfoGetInt(name, index)
+  -> Obtém valor inteiro por nome
+  -> Nomes suportados:
+     ServerCode, ServerPort, ServerLock
+     MaxLevelCharacter, ServerMinLevel, ServerMaxLevel
+     ServerMinReset, ServerMaxReset
+     NonPK, TradeSwitch, DuelSwitch, PersonalShopSwitch
+     CashShopSwitch
+     AddExperienceRate[index], OffAttackExperienceRate[index]
+     AutoResetExperienceRate[index], ItemDropRate[index]
+     MoneyAmountDropRate[index]
+     OnlineRewardCoin1Delay, OnlineRewardCoin2Delay, OnlineRewardCoin3Delay
+     OnlineRewardCoin1Value[index], OnlineRewardCoin2Value[index], OnlineRewardCoin3Value[index]
+  -> Retorno: int
+
+ServerInfoGet(name)
+  -> Alias para ServerInfoGetInt(name, -1)
+
+ServerInfoGetString(name)
+  -> Obtém string por nome
+  -> Nomes suportados:
+     ServerName, ServerVersion, ServerSerial
+     AnnounceChaosMixSuccess, AnnounceChaosMixFailed
+     CommandRewardType1Text, CommandRewardType2Text
+  -> Retorno: string
+
+================================================================================
+                                NPC TALK
+================================================================================
+
+NpcTalk(aIndex, npcIndex)
+  -> Abre diálogo com NPC
+  -> Retorno: 1 se ok
+
+NpcTalkClose(aIndex)
+  -> Fecha diálogo com NPC
+  -> Retorno: 1 se ok
+
+OpenWarehouse(aIndex)
+  -> Abre warehouse (como NPC 240)
+  -> Retorno: 1 se ok
+
+OpenGuildWarehouse(aIndex)
+  -> Abre guild warehouse (como NPC 241)
+  -> Retorno: 1 se ok
+
+================================================================================
+                            MONSTER SET BASE
+================================================================================
+
+MonsterSetBaseGetInfo(map, index)
+  -> Obtém informações do spawn de monster
+  -> Retorno: table {Index, Type, MonsterClass, Map, Dis, X, Y, TX, TY, Dir, Count, Value}
+
+MonsterSetBaseGetPosition(map, index)
+  -> Obtém posição do spawn
+  -> Retorno: table {Ok, X, Y}
+
+MonsterSetBaseSpawn(map, index)
+  -> Spawna monster baseado no MonsterSetBase
+  -> Retorno: int (objIndex, -1 se falha)
+
+================================================================================
+                               CHAOS BOX
+================================================================================
+
+ChaosBoxReset(aIndex)
+  -> Reseta chaos box
+  -> Retorno: 1 se ok
+
+ChaosBoxClose(aIndex)
+  -> Fecha chaos box
+  -> Retorno: 1 se ok
+
+ChaosMix(aIndex, type, subtype)
+  -> Executa chaos mix
+  -> Retorno: 1 se ok
+
+ChaosMixEx(aIndex, type)
+  -> Executa chaos mix (sem subtype)
+  -> Retorno: 1 se ok
+
+================================================================================
+                               CUSTOM MIX
+================================================================================
+
+CustomMixCheck(index)
+  -> Verifica se custom mix existe
+  -> Retorno: 1 se existe
+
+CustomMixGetSuccessRate(index, accountLevel)
+  -> Obtém taxa de sucesso
+  -> accountLevel: 0-3
+  -> Retorno: int
+
+CustomMixGetMoney(index)
+  -> Obtém custo do mix
+  -> Retorno: int
+
+CustomMixGetReward(index)
+  -> Obtém recompensa (BagSpecial)
+  -> Retorno: int
+
+CustomMixCheckItem(aIndex, index)
+  -> Verifica itens para o mix
+  -> Retorno: 1 se ok
+
+CustomMixGetInfo(index)
+  -> Obtém informações do mix
+  -> Retorno: table {Index, MixMoney, SuccessRate0, SuccessRate1, SuccessRate2, SuccessRate3}
+
+CustomMixGetItemInfo(index)
+  -> Obtém lista de itens do mix
+  -> Retorno: table array de {Index, Group, Count, ItemIndex, Level, Option1, Option2, Option3, NewOption, SetOption}
+
+================================================================================
+                         CASTLE SIEGE (GAMESERVER_TYPE==1)
+================================================================================
+
+CastleSiegeGetState()
+  -> Obtém estado atual do Castle Siege
+  -> Retorno: int (-1 a 9)
+
+CastleSiegeGetRemainSec()
+  -> Obtém segundos restantes
+  -> Retorno: int
+
+CastleSiegeGetOwnerGuild()
+  -> Obtém nome da guild dona
+  -> Retorno: string
+
+CastleSiegeCheckOwnerMember(aIndex)
+  -> Verifica se é membro da guild dona
+  -> Retorno: 1 se é
+
+CastleSiegeCheckOwnerUnionMember(aIndex)
+  -> Verifica se é membro da união dona
+  -> Retorno: 1 se é
+
+CastleSiegeCheckGuildOwnCastle(guildName)
+  -> Verifica se guild é dona do castelo
+  -> Retorno: 1 se é
+
+CastleSiegeGetTowerAccessable()
+  -> Verifica acesso à torre
+  -> Retorno: int
+
+CastleSiegeGetHuntZoneEnter()
+  -> Verifica entrada na hunt zone
+  -> Retorno: 1 se permitido
+
+CastleSiegeGetMoney()
+  -> Obtém dinheiro do castelo
+  -> Retorno: int64
+
+CastleSiegeCheckHasMoney(money)
+  -> Verifica se tem dinheiro suficiente
+  -> Retorno: 1 se tem
+
+CastleSiegeGetLeftSiegeDate()
+  -> Obtém data do próximo siege
+  -> Retorno: table {Year, Month, Day, Hour, Minute, Second}
+
+CastleSiegeCalcLeftSiegeDate()
+  -> Calcula data do próximo siege
+  -> Retorno: int
+
+CastleSiegeIsEnabled()
+  -> Verifica se CS está habilitado
+  -> Retorno: 1 se está
+
+CastleSiegeIsRunning()
+  -> Verifica se CS está rodando
+  -> Retorno: 1 se está
+
+CastleSiegeGetCycle()
+  -> Obtém ciclo do CS
+  -> Retorno: int
+
+CastleSiegeSendAllUserMsg(msg, type)
+  -> Envia mensagem para todos
+
+CastleSiegeSendCsUserMsg(msg)
+  -> Envia mensagem para usuários do CS
+
+CastleSiegeCheckGuardianStatueExist()
+  -> Verifica existência da estátua
+  -> Retorno: 1 se existe
+
+CastleSiegeCheckAttackGuildExist()
+  -> Verifica guilds atacantes
+  -> Retorno: 1 se existem
+
+CastleSiegeCheckUnionGuildMaster(aIndex)
+  -> Verifica se é master da união
+  -> Retorno: 1 se é
+
+CastleSiegeNotifySelfCsJoinSide(aIndex)
+  -> Notifica lado de entrada no CS
+
+CastleSiegeNotifyCsSelfLeftTime(aIndex)
+  -> Notifica tempo restante
+
+================================================================================
+                          CASTLE SIEGE SYNC
+================================================================================
+
+CastleSiegeSyncGetState()
+  -> Obtém estado sincronizado
+  -> Retorno: int
+
+CastleSiegeSyncGetTaxRateChaos(aIndex)
+  -> Obtém taxa chaos (0-3)
+  -> Retorno: int
+
+CastleSiegeSyncGetTaxRateStore(aIndex)
+  -> Obtém taxa loja (0-3)
+  -> Retorno: int
+
+CastleSiegeSyncGetTaxHuntZone(aIndex, checkOwner)
+  -> Obtém taxa hunt zone
+  -> Retorno: int
+
+CastleSiegeSyncGetOwnerGuild()
+  -> Obtém guild dona
+  -> Retorno: string
+
+CastleSiegeSyncCheckOwnerMember(aIndex)
+  -> Verifica membro da guild dona
+  -> Retorno: 1 se é
+
+CastleSiegeSyncCheckOwnerUnionMember(aIndex)
+  -> Verifica membro da união dona
+  -> Retorno: 1 se é
+
+CastleSiegeSyncGetTributeMoney()
+  -> Obtém tributo acumulado
+  -> Retorno: int
+
+================================================================================
+                           INVASION MANAGER
+================================================================================
+
+InvasionGetState(index)
+  -> Obtém estado da invasão
+  -> Retorno: int (0=BLANK, 1=EMPTY, 2=START)
+
+InvasionGetRemainTime(index)
+  -> Obtém minutos restantes
+  -> Retorno: int
+
+InvasionIsRunning(index)
+  -> Verifica se invasão está ativa
+  -> Retorno: 1 se ativa
+
+InvasionIsWaiting(index)
+  -> Verifica se invasão está aguardando
+  -> Retorno: 1 se aguardando
+
+InvasionStart(index)
+  -> Inicia invasão em ~2 minutos
+
+InvasionGetInfo(index)
+  -> Obtém informações da invasão
+  -> Retorno: table {Index, State, RemainTime, IsRunning, IsWaiting, IsBlank}
+
+InvasionGetAllInfo()
+  -> Obtém todas as invasões ativas
+  -> Retorno: table de invasões
+
+InvasionGetActiveCount()
+  -> Conta invasões ativas
+  -> Retorno: int
+
+InvasionGetActiveList()
+  -> Lista índices de invasões ativas
+  -> Retorno: table array
+
+================================================================================
+                           CUSTOM NPC QUEST
+================================================================================
+
+CustomNpcQuestCheck(aIndex, npcIndex)
+  -> Verifica/ativa quest via NPC
+  -> Retorno: 1 se ativou
+
+CustomNpcQuestCheckCharacter(aIndex, quest)
+  -> Verifica requisitos do personagem
+  -> Retorno: 1 se atende
+
+CustomNpcQuestCheckItem(aIndex, quest)
+  -> Verifica itens necessários
+  -> Retorno: 1 se tem
+
+CustomNpcQuestCheckMonster(aIndex, quest, count)
+  -> Verifica monsters mortos
+  -> Retorno: 1 se completou
+
+CustomNpcQuestGetPlayerQuest(aIndex)
+  -> Obtém quest atual do jogador
+  -> Retorno: int (-1 se nenhuma)
+
+CustomNpcQuestGetPlayerMonsterIndex(aIndex)
+  -> Obtém índice do monster da quest
+  -> Retorno: int
+
+CustomNpcQuestGetPlayerMonsterQtd(aIndex)
+  -> Obtém quantidade restante de monsters
+  -> Retorno: int
+
+================================================================================
+                            CUSTOM MONSTER
+================================================================================
+
+CustomMonsterGetInfo(monsterIndex, map)
+  -> Obtém informações do custom monster
+  -> Retorno: table {Found, Index, MapNumber, MaxLife, DamageMin, DamageMax, 
+              Defense, AttackRate, DefenseRate, ExperienceRate, KillMessage, 
+              InfoMessage, RewardValue1, RewardValue2, SummonMonster, 
+              SummonMonsterCount, SummonMonsterRate}
+
+CustomMonsterGetExperienceRate(monsterIndex, map)
+  -> Obtém taxa de experiência
+  -> Retorno: int (%)
+
+CustomMonsterGetMasterExperienceRate(monsterIndex, map)
+  -> Obtém taxa de master exp
+  -> Retorno: int (%)
+
+================================================================================
+                           CUSTOM START ITEM
+================================================================================
+
+CustomStartItemSet(aIndex)
+  -> Aplica todos os itens/buffs/coins iniciais
+
+CustomStartItemInsertItem(aIndex)
+  -> Apenas insere itens iniciais
+
+CustomStartItemInsertBuff(aIndex)
+  -> Apenas aplica buffs iniciais
+
+CustomStartItemInsertCoin(aIndex)
+  -> Apenas adiciona coins iniciais
+
+================================================================================
+                            EFFECT MANAGER
+================================================================================
+
+EffectAdd(aIndex, effectIndex, count, value1, value2, value3, value4)
+  -> Adiciona efeito com valores customizados
+  -> Retorno: 1 se ok
+
+EffectAddDefault(aIndex, effectIndex, count)
+  -> Adiciona efeito com valores do config
+  -> Retorno: 1 se ok
+
+EffectDel(aIndex, effectIndex)
+  -> Remove efeito específico
+  -> Retorno: 1 se removido
+
+EffectDelByGroup(aIndex, group)
+  -> Remove efeito por grupo
+  -> Retorno: 1 se removido
+
+EffectCheck(aIndex, effectIndex)
+  -> Verifica se tem efeito
+  -> Retorno: 1 se tem
+
+EffectCheckByGroup(aIndex, group)
+  -> Verifica se tem efeito do grupo
+  -> Retorno: 1 se tem
+
+EffectGet(aIndex, effectIndex)
+  -> Obtém informações do efeito ativo
+  -> Retorno: table {Found, Index, Group, Count, Time, Value1, Value2, Value3, Value4}
+
+EffectGetInfo(effectIndex)
+  -> Obtém configuração do efeito
+  -> Retorno: table {Found, Index, Group, ItemIndex, Name, Save, Type, Flag, Count}
+
+EffectCheckStun(aIndex)
+  -> Verifica se está stunado
+  -> Retorno: 1 se está
+
+EffectCheckImmobilize(aIndex)
+  -> Verifica se está imobilizado
+  -> Retorno: 1 se está
+
+EffectClearAll(aIndex)
+  -> Remove todos os buffs tipo 0
+
+EffectClearDebuff(aIndex, count)
+  -> Remove quantidade de debuffs
+
+================================================================================
+                                  GATE
+================================================================================
+
+GateGetInfo(gateIndex)
+  -> Obtém informações do gate
+  -> Retorno: table {Found, Index, Flag, Map, X, Y, TX, TY, TargetGate, Dir, 
+              MinLevel, MaxLevel, MinReset, MaxReset, AccountLevel}
+
+GateGetMap(gateIndex)
+  -> Obtém mapa do gate
+  -> Retorno: int (-1 se inválido)
+
+GateIsValid(gateIndex)
+  -> Verifica se gate existe
+  -> Retorno: 1 se existe
+
+GateIsInGate(aIndex, gateIndex)
+  -> Verifica se jogador está no gate
+  -> Retorno: 1 se está
+
+GateGet(gateIndex)
+  -> Obtém posição calculada do gate
+  -> Retorno: table {Ok, Gate, Map, X, Y, Dir, Level}
+
+================================================================================
+                              GAME MASTER
+================================================================================
+
+GameMasterCheck(aIndex, level)
+  -> Verifica se é GM com nível >= level
+  -> Retorno: 1 se é
+
+GameMasterSet(aIndex, level)
+  -> Define jogador como GM
+
+================================================================================
+                          CONSTANTES DE EFEITO
+================================================================================
+
+EFFECT_GREATER_DAMAGE = 1
+EFFECT_GREATER_DEFENSE = 2
+EFFECT_ELF_BUFFER = 3
+EFFECT_MANA_SHIELD = 4
+EFFECT_GREATER_CRITICAL_DAMAGE = 5
+EFFECT_INFINITY_ARROW = 6
+EFFECT_BP_RECOVERY = 7
+EFFECT_GREATER_LIFE = 8
+EFFECT_GREATER_MANA = 9
+EFFECT_BLESS_POTION = 10
+EFFECT_SOUL_POTION = 11
+EFFECT_POISON = 55
+EFFECT_ICE = 56
+EFFECT_ICE_ARROW = 57
+EFFECT_FIRE_SLASH = 58
+EFFECT_STERN = 61
+EFFECT_SLEEP = 72
+EFFECT_BLIND = 73
+... (ver EffectManager.h para lista completa)
+
+================================================================================
+                             EXEMPLOS DE USO
+================================================================================
+
+-- Teleportar jogador para Lorencia
+Teleport(aIndex, 0, 130, 130)
+
+-- Criar monster
+local monster = CreateMonsterEx(0, 100, 130, 130)
+if monster ~= -1 then
+    LogAdd("Monster criado: " .. monster)
+end
+
+-- Adicionar buff de velocidade por 5 minutos
+EffectAdd(aIndex, 44, 300, 10, 0, 0, 0)
+
+-- Verificar se invasão está ativa
+if InvasionIsRunning(0) == 1 then
+    LogAdd("Golden Invasion está ativa!")
+end
+
+-- Teleportar para gate
+local gateInfo = GateGet(17)
+if gateInfo.Ok == 1 then
+    Teleport(aIndex, gateInfo.Map, gateInfo.X, gateInfo.Y)
+end
+
+-- Verificar se é GM
+if GameMasterCheck(aIndex, 3) == 1 then
+    LogAdd("Player é GM level 3+")
+end
+
+-- Agendar evento
+local schedules = {
+    {Hour = 20, Minute = 0, Second = 0, DayOfWeek = -1},
+    {Hour = 22, Minute = 0, Second = 0, DayOfWeek = -1}
+}
+local remainSec = ScheduleGetRemainSeconds(schedules)
+LogAdd("Próximo evento em " .. remainSec .. " segundos")
+
+======================================
+=======     END OF DOCUMENT    =======
+======================================

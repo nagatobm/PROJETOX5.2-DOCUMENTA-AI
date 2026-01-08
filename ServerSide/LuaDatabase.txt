@@ -1,0 +1,214 @@
+LuaDatabase (SQL) - Documentação
+===============================
+
+Visão geral
+-----------
+O módulo `LuaDatabase` expõe para o Lua uma classe chamada `SQL` (wrapper de `SQLServer`),
+que executa queries via ODBC através do `CQueryManager` (`gQueryManager`).
+
+Registro no Lua
+---------------
+No Lua atual do projeto (sol2), `SQL` é registrado em `RegisterDatabase(sol::state& lua)`:
+
+- Classe: `SQL`
+- Construtor: `SQL.new()` cria uma nova instância.
+
+Exemplo:
+  local db = SQL.new()
+
+Observação:
+- O método `RegisterDatabase` deve ser chamado no estado Lua usado pelos scripts (ex.: `ScriptLoader.cpp`).
+- Se `SQL` estiver `nil` no Lua, o binding não foi registrado naquele estado Lua.
+
+API (classe SQL)
+----------------
+
+1) `SQL:connect(type, conStr, uid, pwd) -> int`
+Conecta no banco via ODBC.
+
+Parâmetros:
+- `type` (int): parâmetro ignorado no servidor (mantido por compatibilidade).
+- `conStr` (string): DSN/ODBC string.
+- `uid` (string): usuário.
+- `pwd` (string): senha.
+
+Retorno:
+- `1` = sucesso
+- `0` = falha
+
+Exemplo:
+  local ok = db:connect(0, "MuOnline", "sa", "123")
+  if ok == 1 then
+    LogPrint("Conectado!")
+  end
+
+2) `SQL:exec(query) -> int`
+Executa uma query SQL (SELECT/UPDATE/INSERT/etc).
+
+Parâmetros:
+- `query` (string): comando SQL.
+
+Retorno:
+- `1` = sucesso
+- `0` = falha
+
+Observação:
+- Para `SELECT`, após `exec` deve ser chamado `fetch()` para posicionar em uma linha.
+- Após terminar, chame `clear()` para fechar cursor/bind.
+
+Exemplo:
+  local ok = db:exec("SELECT Name FROM Character WHERE Name='Player'")
+  if ok == 1 then
+    db:fetch()
+    local name = db:getStr("Name")
+    db:clear()
+  end
+
+3) `SQL:fetch() -> int`
+Avança/lê uma linha do resultado do último `exec()`.
+
+Retorno (no código atual):
+- `1` = existe linha (fetch ok)
+- `0` = não existe linha (`SQL_NO_DATA`) ou falha
+
+Importante:
+- Este retorno NÃO é `SQL_NO_DATA = 100` no código atual. Se seu script Lua comparar
+  `db:fetch() == 100`, vai falhar. Nesse caso, o script deve comparar `== 0` ou o C++
+  deve ser ajustado para retornar o `SQLRETURN` real.
+
+Exemplo:
+  if db:fetch() == 0 then
+    db:clear()
+    return
+  end
+
+4) `SQL:clear() -> void`
+Fecha o cursor/libera binds da statement atual (`gQueryManager->Close()`).
+Deve ser chamado após qualquer query que use cursor/result-set.
+
+Exemplo:
+  db:clear()
+
+5) `SQL:getInt(colName) -> int`
+Lê uma coluna (por nome) como inteiro na linha atual (após `fetch`).
+
+Parâmetros:
+- `colName` (string): nome da coluna.
+
+Retorno:
+- Valor convertido para `int` (atoi).
+- Se a coluna não existir, o `CQueryManager` retorna `-1` no FindIndex, e esse valor pode ser propagado.
+
+Exemplo:
+  local level = db:getInt("cLevel")
+
+6) `SQL:getFloat(colName) -> float`
+Lê uma coluna (por nome) como float na linha atual (após `fetch`).
+
+Parâmetros:
+- `colName` (string)
+
+Retorno:
+- Valor `float` (atof)
+
+Exemplo:
+  local x = db:getFloat("X")
+
+7) `SQL:getStr(colName) -> string`
+Lê uma coluna (por nome) como string na linha atual (após `fetch`).
+
+Parâmetros:
+- `colName` (string)
+
+Retorno:
+- string (buffer local 256, copiado para std::string no C++).
+
+Exemplo:
+  local account = db:getStr("AccountID")
+
+8) `SQL:getResult(index) -> int`
+Lê uma coluna por índice (zero-based do `CQueryManager::GetResult`).
+Uso típico: quando você não quer buscar por nome.
+
+Parâmetros:
+- `index` (int)
+
+Retorno:
+- inteiro convertido da coluna (`atoi`).
+
+Exemplo:
+  local v = db:getResult(0)
+
+9) `SQL:execGetInt(query, colName) -> int`
+Atalho: executa `query`, faz `Fetch()` e retorna uma coluna inteira por nome.
+
+Parâmetros:
+- `query` (string)
+- `colName` (string)
+
+Retorno:
+- `int`
+- `-1` em falha, sem dados ou coluna inválida.
+
+Observação:
+- Esta função já chama `Close()` internamente.
+
+Exemplo:
+  local resets = db:execGetInt("SELECT Resets FROM Character WHERE Name='Player'", "Resets")
+
+10) `SQL:execGetStr(query, colName) -> string`
+Atalho: executa `query`, faz `Fetch()` e retorna uma coluna string por nome.
+
+Parâmetros:
+- `query` (string)
+- `colName` (string)
+
+Retorno:
+- `string`
+- `""` em falha ou sem dados.
+
+Observação:
+- Esta função já chama `Close()` internamente.
+
+Exemplo:
+  local name = db:execGetStr("SELECT Name FROM Character WHERE Name='Player'", "Name")
+
+Boas práticas
+-------------
+- Sempre chame `db:clear()` após terminar de ler resultados de um `SELECT`.
+- Para evitar injeção de SQL, não concatene dados do usuário diretamente na query.
+- Evite usar o mesmo `SQL` simultaneamente em múltiplas threads (o `gQueryManager` é global).
+
+Exemplo completo (SELECT)
+-------------------------
+  local db = SQL.new()
+
+  if db:connect(0, "MuOnline", "sa", "123") == 0 then
+    LogPrint("Falha ao conectar no banco")
+    return
+  end
+
+  local ok = db:exec("SELECT Name, cLevel FROM Character WHERE Name='Player'")
+  if ok == 0 then
+    LogPrint("Falha na query")
+    db:clear()
+    return
+  end
+
+  if db:fetch() == 0 then
+    LogPrint("Sem dados")
+    db:clear()
+    return
+  end
+
+  local name = db:getStr("Name")
+  local level = db:getInt("cLevel")
+
+  db:clear()
+
+Notas de compatibilidade
+------------------------
+- O arquivo `LuaDatabase.cpp` possui suporte condicional `#ifdef OLD_LUA`.
+- No modo sol2 (Lua atual), a classe é registrada como `SQL` com construtor `SQL.new()`.
+
+Fim.

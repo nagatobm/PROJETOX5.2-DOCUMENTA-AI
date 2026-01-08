@@ -1,0 +1,312 @@
+=========  PLAYER CLASS LUA  =========
+======================================
+
+NOTE:
+
+you need declare function by aIndex example:
+
+player = User.new(aIndex)
+playerTarget = User.new(TargetIndex)
+
+player:getName()
+playerTarget:getName()
+
+player:getIndex()
+playerTarget:getIndex()
+
+player:setLife(100)
+playerTarget:setLife(100)
+
+-------------------
+
+OBS:
+in the example above, it is not mandatory to use with TargetIndex, I just left an example as I would use for 2 or 3 or 4 index! you can use it only for an aIndex or within a FOR
+you need to use ":" for every trade function you want to use, see the examples below
+
+-------------------
+
+getIndex() -> return "aIndex"
+getAccountID() -> return Account if is player
+getName() -> return Name if is player
+setName(name) -> set Name if is player
+getConnected() -> return number of state on gameserver returns: 0 = Offline, 1 = Connected, 2 = Logged, 3 = Online
+setConnected(value) -> set Connected state
+getLive() -> return 1 if is live
+setLive(value) -> set Live state
+getType() -> return type of player: 0 = none, 1 = user, 2 = monster, 3 = npc
+setType(value) -> set Type
+getClass() -> return class if is player, if is monster return number in monster.txt
+setClass(value) -> set Class
+getDbClass() -> return DBClass
+setDbClass(value) -> set DBClass
+getChangeUP() -> return ChangeUp
+setChangeUP(value) -> set ChangeUp
+getLevel() -> return Level
+setLevel(value) -> set Level
+getLevelUpPoint() -> return LevelUpPoint
+setLevelUpPoint(value) -> set LevelUpPoint
+getMoney() -> return Money
+setMoney(value) -> set Money
+getStrength() -> return Strength
+setStrength(value) -> set Strength
+getDexterity() -> return Dexterity
+setDexterity(value) -> set Dexterity
+getVitality() -> return Vitality
+setVitality(value) -> set Vitality
+getEnergy() -> return Energy
+setEnergy(value) -> set Energy
+getLeaderShip() -> return Leadership
+setLeaderShip(value) -> set Leadership
+getPKCount() -> return PKCount
+setPKCount(value) -> set PKCount
+getPKLevel() -> return PKLevel
+setPKLevel(value) -> set PKLevel
+getPKTime() -> return PKTime
+setPKTime(value) -> set PKTime
+getX() -> return X position
+setX(value) -> set X position
+getY() -> return Y position
+setY(value) -> set Y position
+getTX() -> return TX position
+setTX(value) -> set TX position
+getTY() -> return TY position
+setTY(value) -> set TY position
+getMTX() -> return MTX position
+setMTX(value) -> set MTX position
+getMTY() -> return MTY position
+setMTY(value) -> set MTY position
+getMapNumber() -> return Map
+setMapNumber(value) -> set Map
+getAuthority() -> return Authority
+setAuthority(value) -> set Authority
+getAuthorityCode() -> return AuthorityCode
+setAuthorityCode(value) -> set AuthorityCode
+getSkin() -> return Change (skin)
+setSkin(value) -> set Change (skin)
+getExp() -> return Experience
+setExp(value) -> set Experience
+getTargetState(slot) -> return VpPlayer[slot].state
+setTargetState(slot, value) -> set VpPlayer[slot].state
+getTargetNumber(slot) -> return VpPlayer[slot].index
+setTargetNumber(slot, value) -> set VpPlayer[slot].index
+getTargetType(slot) -> return VpPlayer[slot].type
+setTargetType(slot, value) -> set VpPlayer[slot].type
+getInterfaceUse() -> return Interface.use
+setInterfaceUse(value) -> set Interface.use
+getInterfaceState() -> return Interface.state
+setInterfaceState(value) -> set Interface.state
+getInterfaceType() -> return Interface.type
+setInterfaceType(value) -> set Interface.type
+getDefense() -> return Defense
+setDefense(value) -> set Defense
+getDefensePvP() -> return DefensePvP
+setDefensePvP(value) -> set DefensePvP
+getSuccessBlock() -> return DefenseSuccessRate
+setSuccessBlock(value) -> set DefenseSuccessRate
+getSuccessBlockPvP() -> return DefenseSuccessRatePvP
+setSuccessBlockPvP(value) -> set DefenseSuccessRatePvP
+getState() -> return State
+setState(value) -> set State
+getDieRegen() -> return DieRegen
+setDieRegen(value) -> set DieRegen
+getTeleport() -> return Teleport
+setTeleport(value) -> set Teleport
+getTargetShopNumber() -> return TargetShopNumber
+setTargetShopNumber(value) -> set TargetShopNumber
+getReqWarehouseOpen() -> return ReqWarehouseOpen
+setReqWarehouseOpen(value) -> set ReqWarehouseOpen
+getWarehouseCount() -> return WarehouseCount
+setWarehouseCount(value) -> set WarehouseCount
+getDir() -> return Dir
+setDir(value) -> set Dir
+getNextExp() -> return NextExperience
+setNextExp(value) -> set NextExperience
+getLife() -> return Life as int
+setLife(value) -> set Life as float
+getMana() -> return Mana as int
+setMana(value) -> set Mana as float
+getMaxLife() -> return MaxLife as int
+setMaxLife(value) -> set MaxLife as float
+getMaxMana() -> return MaxMana as int
+setMaxMana(value) -> set MaxMana as float
+getBP() -> return BP as int
+setBP(value) -> set BP
+getMaxBP() -> return MaxBP as int
+setMaxBP(value) -> set MaxBP
+getShield() -> return Shield as int
+setShield(value) -> set Shield
+getMaxShield() -> return MaxShield as int
+setMaxShield(value) -> set MaxShield
+getVitalityToLife() -> return VitalityToLife as int
+setVitalityToLife(value) -> set VitalityToLife as float
+getEnergyToMana() -> return EnergyToMana as int
+setEnergyToMana(value) -> set EnergyToMana as float
+getOption() -> return Option
+setOption(value) -> set Option
+getAddLife() -> return AddLife
+setAddLife(value) -> set AddLife
+getAddMana() -> return AddMana
+setAddMana(value) -> set AddMana
+getAddBP() -> return AddBP
+setAddBP(value) -> set AddBP
+getAddShield() -> return AddShield
+setAddShield(value) -> set AddShield
+getAttackSpeed() -> return PhysiSpeed
+setAttackSpeed(value) -> set PhysiSpeed
+getMagicSpeed() -> return MagicSpeed
+setMagicSpeed(value) -> set MagicSpeed
+getMagicDamageMin() -> return MagicDamageMin
+setMagicDamageMin(value) -> set MagicDamageMin
+getMagicDamageMax() -> return MagicDamageMax
+setMagicDamageMax(value) -> set MagicDamageMax
+getAttackDamageMinLeft() -> return PhysiDamageMinLeft
+setAttackDamageMinLeft(value) -> set PhysiDamageMinLeft
+getAttackDamageMaxLeft() -> return PhysiDamageMaxLeft
+setAttackDamageMaxLeft(value) -> set PhysiDamageMaxLeft
+getAttackDamageMinRight() -> return PhysiDamageMinRight
+setAttackDamageMinRight(value) -> set PhysiDamageMinRight
+getAttackDamageMaxRight() -> return PhysiDamageMaxRight
+setAttackDamageMaxRight(value) -> set PhysiDamageMaxRight
+getDoubleRate() -> return ResistDoubleDamageRate
+setDoubleRate(value) -> add to ResistDoubleDamageRate
+getIgnoreDefense() -> return ResistIgnoreDefenseRate
+setIgnoreDefense(value) -> add to ResistIgnoreDefenseRate
+getIgnoreSD() -> return ResistIgnoreShieldGaugeRate
+setIgnoreSD(value) -> add to ResistIgnoreShieldGaugeRate
+getCriticalDamage() -> return ResistCriticalDamageRate
+setCriticalDamage(value) -> add to ResistCriticalDamageRate
+getExcellentDamage() -> return ResistExcellentDamageRate
+setExcellentDamage(value) -> add to ResistExcellentDamageRate
+getRegenTime() -> return RegenTime
+setRegenTime(value) -> set RegenTime
+getGetRegen() -> return RegenOk
+setGetRegen(value) -> set RegenOk
+getKillerType() -> return KillerType
+setKillerType(value) -> set KillerType
+getConnectCheckTime() -> return ConnectTickCount
+setConnectCheckTime(value) -> set ConnectTickCount
+getCheckSumTime() -> return CheckSumTime
+setCheckSumTime(value) -> set CheckSumTime
+getPathCount() -> return PathCount
+setPathCount(value) -> set PathCount
+getRegenMapNumber() -> return RegenMapNumber
+setRegenMapNumber(value) -> set RegenMapNumber
+getRegenMapX() -> return RegenMapX
+setRegenMapX(value) -> set RegenMapX
+getRegenMapY() -> return RegenMapY
+setRegenMapY(value) -> set RegenMapY
+getPathCur() -> return PathCur
+setPathCur(value) -> set PathCur
+getPathX(path) -> return PathX[path]
+setPathX(path, value) -> set PathX[path]
+getPathY(path) -> return PathY[path]
+setPathY(path, value) -> set PathY[path]
+getPathDir(path) -> return PathDir[path]
+setPathDir(path, value) -> set PathDir[path]
+getStateTradeOK() -> return TradeOk
+setStateTradeOK() -> set TradeOk to 0 for both players and send GCTradeOkButtonSend
+getTradeTarget() -> return TargetNumber
+setTradeTarget(value) -> set TargetNumber
+getVip() -> return AccountLevel
+setVip(value) -> set AccountLevel
+getReset() -> return Reset
+setReset(value) -> set Reset
+getMasterReset() -> return MasterReset
+setMasterReset(value) -> set MasterReset
+getLoginMessageSend() -> return LoginMessageSend
+setLoginMessageSend(value) -> set LoginMessageSend
+getLoginMessageCount() -> return LoginMessageCount
+setLoginMessageCount(value) -> set LoginMessageCount
+getSendQuestInfo() -> return SendQuestInfo
+setSendQuestInfo(value) -> set SendQuestInfo
+getExpRate() -> return ExperienceRate
+setExpRate(value) -> set ExperienceRate
+getMasterLevel() -> return MasterLevel
+setMasterLevel(value) -> set MasterLevel
+getMasterPoint() -> return MasterPoint
+setMasterPoint(value) -> set MasterPoint
+getMasterExperience() -> return MasterExperience as long long
+setMasterExperience(value) -> set MasterExperience as long long
+getChatLimitTime() -> return ChatLimitTime
+setChatLimitTime(value) -> set ChatLimitTime
+getGuildNumber() -> return GuildNumber or -1 if invalid
+getGuildName() -> return GuildName or "Not find" if invalid
+getGuildWarDeclareState() -> return Guild->WarDeclareState or 0 if invalid
+getGuildWarState() -> return Guild->WarState or 0 if invalid
+getGuildWarType() -> return Guild->WarType or 0 if invalid
+getGuildTotalScore() -> return Guild->TotalScore or 0 if invalid
+getPartyNumber() -> return PartyNumber or 0 if invalid
+setPartyNumber(value) -> set PartyNumber if valid
+getShopOpen() -> return PShopOpen
+setShopOpen(value) -> set PShopOpen
+getPShopText() -> return PShopText
+setPShopText(string) -> set PShopText
+getLock() -> return Lock
+setLock(value) -> set Lock
+getSummonIndex() -> return SummonIndex
+setSummonIndex(value) -> set SummonIndex
+getAutoResetEnable() -> return AutoResetEnable
+setAutoResetEnable(value) -> set AutoResetEnable
+getAutoResetStats(key) -> return AutoResetStats[key]
+setAutoResetStats(key, value) -> set AutoResetStats[key]
+getAutoAddPointCount() -> return AutoAddPointCount
+setAutoAddPointCount(value) -> set AutoAddPointCount
+getAutoAddPointStats(key) -> return AutoAddPointStats[key]
+setAutoAddPointStats(key, value) -> set AutoAddPointStats[key]
+getCoin1() -> return Coin1
+setCoin1(value) -> set Coin1
+getCoin2() -> return Coin2
+setCoin2(value) -> set Coin2
+getCoin3() -> return Coin3
+setCoin3(value) -> set Coin3
+getCashShopTransaction(key) -> return CashShopTransaction[key]
+setCashShopTransaction(key, value) -> set CashShopTransaction[key]
+getInOffAttack() -> return AttackCustom
+setInOffAttack(value) -> set AttackCustom
+getInOffStore() -> return PShopCustomOffline
+setInOffStore(value) -> set PShopCustomOffline
+getAddStrength() -> return AddStrength
+setAddStrength(value) -> set AddStrength
+getAddDexterity() -> return AddDexterity
+setAddDexterity(value) -> set AddDexterity
+getAddVitality() -> return AddVitality
+setAddVitality(value) -> set AddVitality
+getAddEnergy() -> return AddEnergy
+setAddEnergy(value) -> set AddEnergy
+getAddExcellentRate() -> return EffectOption.AddExcellentDamageRate
+setAddExcellentRate(value) -> set EffectOption.AddExcellentDamageRate
+getExcellentRate() -> return ExcellentDamageRate
+setExcellentRate(value) -> set ExcellentDamageRate
+setExcellentResistRate(value) -> set ResistExcellentDamageRate
+getExcellentResistRate() -> return ResistExcellentDamageRate
+getReflectRate() -> return FullDamageReflectRate
+setReflectRate(value) -> set FullDamageReflectRate
+getReflectDamage() -> return DamageReflect
+setReflectDamage(value) -> set DamageReflect
+getDamagePvP() -> return DamagePvP
+setDamagePvP(value) -> set DamagePvP
+getDamageReduction() -> return EffectOption.AddDamageReduction
+setDamageReduction(value) -> set EffectOption.AddDamageReduction
+getShieldDamageReduction() -> return ShieldDamageReduction
+setShieldDamageReduction(value) -> set ShieldDamageReduction
+getTripleDamageRate() -> return TripleDamageRate
+setTripleDamageRate(value) -> set TripleDamageRate
+getDoubleDamageRate() -> return DoubleDamageRate
+setDoubleDamageRate(value) -> set DoubleDamageRate
+getResistDoubleDamageRate() -> return ResistDoubleDamageRate
+setResistDoubleDamageRate(value) -> set ResistDoubleDamageRate
+getAddCriticalRate() -> return EffectOption.AddCriticalDamageRate
+setAddCriticalRate(value) -> set EffectOption.AddCriticalDamageRate
+getCriticalRate() -> return CriticalDamageRate
+setCriticalRate(value) -> set CriticalDamageRate
+setCriticalResistRate(value) -> set ResistCriticalDamageRate
+getCriticalResistRate() -> return ResistCriticalDamageRate
+getUserTable(tipo) -> return value based on tipo (1-31 for various stats)
+setUserTable(tipo, value) -> set value based on tipo (1-31 for various stats)
+useScroll(slot) -> use scroll item in inventory slot, return 1 if success, 0 if fail, -1 if invalid
+getWarehouseNumber() -> return WarehouseNumber or -1 if invalid
+setWarehouseNumber(value) -> set WarehouseNumber
+getExtInventory() -> return ExtInventory (if GAMESERVER_UPDATE==603)
+setExtInventory(value) -> set ExtInventory (if GAMESERVER_UPDATE==603)
+getExtWarehouse() -> return ExtWarehouse (if GAMESERVER_UPDATE==603)
+setExtWarehouse(value) -> set ExtWarehouse (if GAMESERVER_UPDATE==603)

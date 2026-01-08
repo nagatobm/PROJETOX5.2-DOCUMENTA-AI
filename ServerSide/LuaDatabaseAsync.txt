@@ -1,0 +1,133 @@
+LuaDatabaseAsync - Documentação
+==============================
+
+Visão geral
+-----------
+O módulo `LuaDatabaseAsync` expõe para o Lua um conjunto de funções globais para
+executar queries SQL de forma assíncrona (em thread dedicada), usando o serviço
+`CQueryAsync` (`gQueryAsync`).
+
+Ele é independente da classe `SQL` (sincrona) e foi pensado para:
+- não travar o loop principal do GameServer com queries pesadas;
+- buscar resultados depois, sob demanda, via um identificador de job.
+
+Registro no Lua (Lua atual / sol2)
+----------------------------------
+As funções são registradas no estado Lua via:
+
+  `gLuaDatabaseAsync.RegisterFunction(sol::state& lua)`
+
+Isso deve ser chamado no bootstrap do Lua (por exemplo, em `ScriptLoader.cpp` e/ou `Script.cpp`),
+antes de carregar scripts que usem `ConnectQueryAsync`, `CreateAsyncQuery`, etc.
+
+Funções expostas ao Lua
+-----------------------
+
+1) `ConnectQueryAsync(conStr, uid, pwd) -> int`
+Conecta o gerenciador assíncrono ao banco via ODBC.
+
+Parâmetros:
+- `conStr` (string): DSN/ODBC string
+- `uid` (string): usuário
+- `pwd` (string): senha
+
+Retorno:
+- `1` = sucesso
+- `0` = falha
+
+Observações:
+- Essa conexão é a usada pelo sistema assíncrono (`gQueryAsync.manager`).
+
+Exemplo:
+  if ConnectQueryAsync("MuOnline", "sa", "123") == 0 then
+    LogPrint("Falha ao conectar Async")
+  end
+
+2) `CreateAsyncQuery(name, query, aIndex, getResult) -> void`
+Enfileira uma query para execução em thread (fila assíncrona).
+
+Parâmetros:
+- `name` (string): rótulo do job (usado também no callback/evento).
+- `query` (string): SQL a executar.
+- `aIndex` (int): índice do jogador/objeto (contexto para callback).
+- `getResult` (int): controle de resultado
+  - `1` = coletar resultados (SELECT) e armazenar em `m_jobsResult`
+  - `0` = apenas executar (UPDATE/INSERT/etc), sem armazenar resultados
+
+Observações:
+- Quando `getResult == 1`, o sistema irá armazenar as colunas e valores para leitura posterior.
+- O identificador final do job é gerado internamente combinando `name` + um contador (`m_jobsID`).
+  Esse identificador é o que deve ser usado para ler os valores com `QueryAsyncGetValue`.
+
+Exemplo:
+  -- SELECT (com resultado)
+  CreateAsyncQuery("LoadReset", "SELECT Resets FROM Character WHERE Name='Player'", aIndex, 1)
+
+  -- UPDATE (sem resultado)
+  CreateAsyncQuery("SaveReset", "UPDATE Character SET Resets=10 WHERE Name='Player'", aIndex, 0)
+
+3) `QueryAsyncGetValue(jobId, columnName) -> string`
+Retorna o valor (string) de uma coluna do resultado armazenado do job.
+
+Parâmetros:
+- `jobId` (string): identificador retornado/associado ao job (ex.: "LoadReset17").
+- `columnName` (string): nome da coluna a ser lida.
+
+Retorno:
+- `string` com o valor encontrado
+- `"nil"` se o job não existir, se não houver dados, ou se a coluna não bater.
+
+Comportamento importante (sequencial):
+- A função usa `job->second.result_count` para avançar sequencialmente; ou seja, para
+  chamadas repetidas com a mesma coluna, ela tenta retornar o “próximo” valor (próxima linha/registro
+  na lista interna), dependendo de como os resultados foram armazenados.
+
+Exemplo (uma coluna):
+  local v = QueryAsyncGetValue(jobId, "Resets")
+  if v ~= "nil" then
+    LogPrint("Resets=" .. v)
+  end
+
+4) `QueryAsyncDelete(jobId) -> void`
+Remove (libera) da memória o resultado armazenado para um job específico.
+
+Parâmetros:
+- `jobId` (string): identificador do job.
+
+Uso recomendado:
+- Sempre chamar após consumir os dados para evitar crescimento de memória em `m_jobsResult`.
+
+Exemplo:
+  QueryAsyncDelete(jobId)
+
+Fluxo típico de uso (com callback/evento)
+----------------------------------------
+1) Conecta:
+   ConnectQueryAsync(ODBC, User, Password)
+
+2) Dispara job:
+   CreateAsyncQuery("LoadReset", "SELECT Resets FROM Character WHERE Name='Player'", aIndex, 1)
+
+3) Quando o job termina, o servidor dispara um evento/callback (depende do seu fluxo):
+   - Via `OnSQLAsyncResult` / `BridgeFunction_OnSQLAsyncResult` (recomendado no seu projeto atual)
+     passando:
+       label = name
+       param = jobId (identificação)
+       result = 0/1
+
+4) No Lua, dentro do callback, consulta os dados:
+   local resets = QueryAsyncGetValue(jobId, "Resets")
+
+5) Finaliza:
+   QueryAsyncDelete(jobId)
+
+Notas e limitações
+------------------
+- Os resultados são armazenados como strings. Converta no Lua (`tonumber`) se necessário.
+- `"nil"` é retornado como string literal (não é o tipo `nil` do Lua).
+- O armazenamento atual percorre resultados em lista e usa um contador incremental; para múltiplas linhas,
+  o consumo deve ser feito de forma consistente.
+- O sistema assíncrono depende de thread/semáforo (fila). Caso o servidor não esteja inicializando a thread,
+  os jobs não irão completar.
+
+Fim.

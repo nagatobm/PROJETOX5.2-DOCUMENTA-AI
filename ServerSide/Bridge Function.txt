@@ -1,0 +1,246 @@
+================================================================================
+1) O QUE VOCÊ PRECISA TER NO SEU SCRIPT
+================================================================================
+
+Obs (importante)
+- Se você carregar o ScriptCore, ele já cria as funções dispatcher `BridgeFunction_*`.
+- Se você NÃO carregar o ScriptCore, então você mesmo precisa criar as funções globais:
+  BridgeFunction_OnReadScript
+  BridgeFunction_OnShutScript
+  BridgeFunction_OnTimerThread
+  BridgeFunction_OnCommandManager
+  BridgeFunction_OnCommandDone
+  BridgeFunction_OnCharacterEntry
+  BridgeFunction_OnCharacterClose
+  BridgeFunction_OnNpcTalk
+  BridgeFunction_OnMonsterDie
+  BridgeFunction_OnUserDie
+  BridgeFunction_OnUserMove
+  BridgeFunction_OnUserRespawn
+  BridgeFunction_OnCheckUserTarget
+  BridgeFunction_OnCheckUserKiller
+  BridgeFunction_OnUserItemPick
+  BridgeFunction_OnUserItemDrop
+  BridgeFunction_OnUserItemMove
+  BridgeFunction_OnSQLAsyncResult
+  BridgeFunction_GameServerProtocol
+
+Exemplo base:
+
+  -- ScriptCore (já precisa estar carregado)
+  -- require("ScriptCore")   -- se você usar arquivos separados
+
+  function Minha_OnReadScript()
+    LogPrint("OnReadScript")
+  end
+
+  BridgeFunctionAttach("OnReadScript", "Minha_OnReadScript")
+
+================================================================================
+2 - FUNÇÃO PRINCIPAL DE REGISTRO
+================================================================================
+
+BridgeFunctionAttach(BridgeName, FunctionName)
+- BridgeName: string do evento (ex: "OnReadScript")
+- FunctionName: string com o nome da sua função global (ex: "Minha_OnReadScript")
+
+Ex:
+  BridgeFunctionAttach("OnTimerThread", "Minha_OnTimer")
+
+================================================================================
+3 - EVENTOS DISPONÍVEIS (NOMES + ASSINATURA DO HANDLER)
+================================================================================
+
+IMPORTANTE
+- Você NÃO chama BridgeFunction_On* manualmente.
+- Você só registra sua função com BridgeFunctionAttach.
+- Para eventos que “retornam int”, sua função deve retornar número.
+
+OnReadScript
+- Handler: function MyFunc()
+Ex:
+  function My_OnReadScript()
+    -- inicialização do seu script
+  end
+  BridgeFunctionAttach("OnReadScript", "My_OnReadScript")
+
+OnShutScript
+- Handler: function MyFunc()
+Ex:
+  function My_OnShutScript()
+    -- finalização
+  end
+  BridgeFunctionAttach("OnShutScript", "My_OnShutScript")
+
+OnTimerThread
+- Handler: function MyFunc()
+Ex:
+  function My_OnTimerThread()
+    -- roda no timer do servidor
+  end
+  BridgeFunctionAttach("OnTimerThread", "My_OnTimerThread")
+
+OnCommandManager
+- Handler: function MyFunc(aIndex, code, arg) -> int
+- Retorno esperado no ScriptCore:
+  - se retornar != 0, o ScriptCore retorna 1 (comando tratado)
+  - se retornar 0, continua para o próximo handler
+Ex:
+  function My_OnCommandManager(aIndex, code, arg)
+    if code == GetCommandCode("/hello") then
+      NoticeSend(aIndex, 0, "Hello!")
+      return 1
+    end
+    return 0
+  end
+  BridgeFunctionAttach("OnCommandManager", "My_OnCommandManager")
+
+OnCommandDone
+- Handler: function MyFunc(aIndex, code)
+Ex:
+  function My_OnCommandDone(aIndex, code)
+    LogPrint("Command done: " .. tostring(code))
+  end
+  BridgeFunctionAttach("OnCommandDone", "My_OnCommandDone")
+
+OnCharacterEntry
+- Handler: function MyFunc(aIndex)
+Ex:
+  function My_OnCharacterEntry(aIndex)
+    NoticeSend(aIndex, 0, "Bem-vindo!")
+  end
+  BridgeFunctionAttach("OnCharacterEntry", "My_OnCharacterEntry")
+
+OnCharacterClose
+- Handler: function MyFunc(aIndex)
+Ex:
+  function My_OnCharacterClose(aIndex)
+    -- player saindo
+  end
+  BridgeFunctionAttach("OnCharacterClose", "My_OnCharacterClose")
+
+OnNpcTalk
+- Handler: function MyFunc(aIndex, bIndex) -> int
+- Retorno esperado no ScriptCore:
+  - se retornar != 0, o ScriptCore retorna 1 (NPC tratado)
+  - se retornar 0, continua para o próximo handler
+Ex:
+  function My_OnNpcTalk(aIndex, bIndex)
+    -- aIndex = player, bIndex = npc
+    -- se você tratar o NPC, retorne 1
+    return 0
+  end
+  BridgeFunctionAttach("OnNpcTalk", "My_OnNpcTalk")
+
+OnMonsterDie
+- Handler: function MyFunc(aIndex, bIndex)
+Ex:
+  function My_OnMonsterDie(aIndex, bIndex)
+    -- aIndex = monster, bIndex = killer
+  end
+  BridgeFunctionAttach("OnMonsterDie", "My_OnMonsterDie")
+
+OnUserDie
+- Handler: function MyFunc(aIndex, bIndex)
+Ex:
+  function My_OnUserDie(aIndex, bIndex)
+    -- aIndex = user morto, bIndex = killer
+  end
+  BridgeFunctionAttach("OnUserDie", "My_OnUserDie")
+
+OnUserMove
+- Handler: function MyFunc(aIndex, MapIndex)
+Ex:
+  function My_OnUserMove(aIndex, MapIndex)
+    -- chamado ao trocar/mover no mapa
+  end
+  BridgeFunctionAttach("OnUserMove", "My_OnUserMove")
+
+OnUserRespawn
+- Handler: function MyFunc(aIndex, KillerType)
+Ex:
+  function My_OnUserRespawn(aIndex, KillerType)
+    -- chamado no respawn
+  end
+  BridgeFunctionAttach("OnUserRespawn", "My_OnUserRespawn")
+
+OnCheckUserTarget
+- Handler: function MyFunc(aIndex, bIndex) -> int
+- Retorno esperado no ScriptCore:
+  - se retornar 0, o ScriptCore retorna 0 (bloqueia)
+  - se retornar != 0, continua e no final retorna 1
+Ex:
+  function My_OnCheckUserTarget(aIndex, bIndex)
+    -- retorne 0 para bloquear target
+    return 1
+  end
+  BridgeFunctionAttach("OnCheckUserTarget", "My_OnCheckUserTarget")
+
+OnCheckUserKiller
+- Handler: function MyFunc(aIndex, bIndex) -> int
+- Mesma lógica do OnCheckUserTarget.
+Ex:
+  function My_OnCheckUserKiller(aIndex, bIndex)
+    return 1
+  end
+  BridgeFunctionAttach("OnCheckUserKiller", "My_OnCheckUserKiller")
+
+OnUserItemPick
+- Handler: function MyFunc(aIndex, slot) -> int
+- Retorno esperado no ScriptCore:
+  - se retornar 0, o ScriptCore retorna 0 (bloqueia pick)
+  - se retornar != 0, no final retorna 1
+Ex:
+  function My_OnUserItemPick(aIndex, slot)
+    return 1
+  end
+  BridgeFunctionAttach("OnUserItemPick", "My_OnUserItemPick")
+
+OnUserItemDrop
+- Handler: function MyFunc(aIndex, slot, x, y) -> int
+- Mesma lógica (0 bloqueia, 1 permite).
+Ex:
+  function My_OnUserItemDrop(aIndex, slot, x, y)
+    return 1
+  end
+  BridgeFunctionAttach("OnUserItemDrop", "My_OnUserItemDrop")
+
+OnUserItemMove
+- Handler: function MyFunc(aIndex, aFlag, aSlot, bFlag, bSlot) -> int
+- Mesma lógica (0 bloqueia, 1 permite).
+Ex:
+  function My_OnUserItemMove(aIndex, aFlag, aSlot, bFlag, bSlot)
+    return 1
+  end
+  BridgeFunctionAttach("OnUserItemMove", "My_OnUserItemMove")
+
+OnSQLAsyncResult
+- Handler: function MyFunc(label, param, result)
+Ex:
+  function My_OnSQLAsyncResult(label, param, result)
+    LogPrint("SQL label=" .. tostring(label) .. " result=" .. tostring(result))
+  end
+  BridgeFunctionAttach("OnSQLAsyncResult", "My_OnSQLAsyncResult")
+
+GameServerProtocol
+Ex:
+  function My_GameServerProtocol(aIndex, head, packetName)
+    -- recebe notificação de pacote custom socket (0xFA)
+    -- o packetName é o nome do pacote registrado pelo socket
+  end
+  BridgeFunctionAttach("GameServerProtocol", "My_GameServerProtocol")
+
+================================================================================
+4 - EXEMPLO COMPLETO (MÚLTIPLOS HANDLERS NO MESMO EVENTO)
+================================================================================
+
+  function A_OnReadScript()
+    LogPrint("A")
+  end
+
+  function B_OnReadScript()
+    LogPrint("B")
+  end
+
+  BridgeFunctionAttach("OnReadScript", "A_OnReadScript")
+  BridgeFunctionAttach("OnReadScript", "B_OnReadScript")

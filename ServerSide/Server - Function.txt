@@ -1,0 +1,543 @@
+================================================================================
+1 - LISTA DE FUNÇÕES DISPONÍVEIS NO LUA
+================================================================================
+
+-- Compat / básicos
+GetObjectName(aIndex)
+GetObjectAccountLevel(aIndex)
+GetItem(aIndex, pos)
+GET_ITEM(aIndex, pos)
+GetMaxIndex()
+GetMinUserIndex()
+GetMaxUserIndex()
+GetMinMonsterIndex()
+GetMaxMonsterIndex()
+
+-- Object getters
+GetObjectConnected(aIndex)
+GetObjectType(aIndex)
+GetObjectLevel(aIndex)
+GetObjectMoney(aIndex)
+GetObjectClass(aIndex)
+GetObjectMap(aIndex)
+GetObjectMapX(aIndex)
+GetObjectMapY(aIndex)
+GetObjectReset(aIndex)
+GetObjectMasterReset(aIndex)
+
+-- Log
+LogPrint(message)
+LogColor(color, message)
+
+-- Stats / recursos
+GetObjectStrength(aIndex)
+GetObjectDexterity(aIndex)
+GetObjectVitality(aIndex)
+GetObjectEnergy(aIndex)
+GetObjectLeadership(aIndex)
+GetObjectLife(aIndex)
+GetObjectMaxLife(aIndex)
+GetObjectMana(aIndex)
+GetObjectMaxMana(aIndex)
+GetObjectBP(aIndex)
+GetObjectMaxBP(aIndex)
+GetObjectShield(aIndex)
+GetObjectMaxShield(aIndex)
+
+-- Outros getters
+GetObjectAccount(aIndex)
+GetObjectPersonalCode(aIndex)
+GetObjectAuthority(aIndex)
+GetObjectPartyNumber(aIndex)
+GetObjectGuildNumber(aIndex)
+GetObjectPKCount(aIndex)
+GetObjectPKLevel(aIndex)
+GetObjectPKTimer(aIndex)
+GetObjectMasterLevel(aIndex)
+GetObjectMasterPoint(aIndex)
+GetObjectAccountExpireDate(aIndex)
+
+-- Notice / Post
+NoticeSend(aIndex, type, message)
+NoticeSendToAll(type, message)
+NoticeGlobalSend(type, message)
+PostSend(aIndex, message)
+PostSendToAll(message)
+GlobalPostSend(type, name, message)
+
+-- Combate / comandos / utils
+Attack(attackerIndex, targetIndex)
+AttackSkill(attackerIndex, targetIndex, skillNumber)
+GetCommandCode(label)
+GetCommandNumber(argString, pos)
+GetCommandString(argString, pos)
+GetTickCount()
+GetDistance(aIndex, bIndex)
+FindNearestMonster(aIndex, maxDistance)
+
+-- EffectOption
+GetObjectEffectOption(aIndex)
+GetObjectEffectOptionValue(aIndex, fieldName)
+GetObjectEffectAddAttackSuccessRate(aIndex)
+GetObjectEffectAddDefense(aIndex)
+GetObjectEffectAddMaxHP(aIndex)
+GetObjectEffectAddExperienceRate(aIndex)
+GetObjectEffectAddItemDropRate(aIndex)
+
+-- Eventos
+EventStartBegin(aIndex, ...nums)
+EventStartCancel()
+EventQuicklyBegin(aIndex, ...nums)
+EventFindPathBegin()
+
+-- User helpers
+UserTeleport(aIndex, map, x, y)
+UserMoveGate(aIndex, gate)
+UserAddMoney(aIndex, amount)
+UserSetMoney(aIndex, amount)
+UserAddCoin(aIndex, coinType, amount)
+UserGetMap(aIndex)
+UserGetX(aIndex)
+UserGetY(aIndex)
+UserDisconnect(aIndex)
+UserGetName(aIndex)
+UserGetAccount(aIndex)
+UserSetPK(aIndex, pkLevel, pkTime, pkCount)
+UserRestoreHP(aIndex, amount)
+UserRestoreMP(aIndex, amount)
+UserRestoreSD(aIndex, amount)
+UserRestoreBP(aIndex, amount)
+CommandSend(aIndex, commandString)
+
+-- Legacy: death/guild
+LuaGetObjectDeathMap(aIndex)
+LuaGetObjectDeathMapX(aIndex)
+LuaGetObjectDeathMapY(aIndex)
+LuaGetObjectGuildNumber(aIndex)
+LuaGetObjectGuildStatus(aIndex)
+LuaGetObjectGuildName(aIndex)
+LuaGetObjectGuildRelationship(aIndex, bIndex)
+LuaGetObjectGuildUnionNumber(aIndex)
+LuaGetObjectGuildUnionName(aIndex)
+
+-- Movimentação/atualizações
+MoveUser(aIndex, gate)
+MoveUserEx(aIndex, map, x, y)
+UserCalcAttribute(aIndex)
+UserInfoSend(aIndex)
+UserActionSend(aIndex, bIndex, action)
+UserSetAccountLevel(aIndex, aValue, bValue)
+
+-- Coin/Permission
+ObjectGetCoin(aIndex)
+ObjectAddCoin(aIndex, coin1, coin2, coin3)
+ObjectSubCoin(aIndex, coin1, coin2, coin3)
+PermissionCheck(aIndex, permissionIndex)
+PermissionInsert(aIndex, permissionIndex)
+PermissionRemove(aIndex, permissionIndex)
+
+-- Itens
+ItemDrop(aIndex, map, x, y, specialValue)
+ItemDropEx(aIndex, map, x, y, itemIndex, level, dur, opt1, opt2, opt3, ...)
+ItemGive(aIndex, specialValue)
+ItemGiveEx(aIndex, itemIndex, level, dur, opt1, opt2, opt3, newOpt, ...)
+LevelUpSend(aIndex)
+
+================================================================================
+2 - DOCUMENTAÇÃO / COMO USAR (ASSINATURA + RETORNO + EXEMPLOS)
+================================================================================
+
+NOTAS RÁPIDAS
+- aIndex = índice do player/monstro no servidor.
+- Se o índice for inválido/offline, vários getters retornam 0, -1 ou "".
+
+----------------------------------------
+GetObjectName(aIndex)
+- Pega o nome do objeto.
+Ex:
+  local name = GetObjectName(aIndex)
+
+GetObjectAccountLevel(aIndex)
+- Pega o nível/flag da conta.
+Ex:
+  if GetObjectAccountLevel(aIndex) > 0 then
+    LogPrint("VIP/GM")
+  end
+
+GetItem(aIndex, pos) / GET_ITEM(aIndex, pos)
+- Pega o item (m_Index) de um slot do inventário.
+Ex:
+  local idx = GetItem(aIndex, 0)
+  if idx ~= -1 then LogPrint("Slot 0 tem item") end
+
+GetMaxIndex()
+- Pega o limite máximo de índices.
+Ex:
+  for i = 0, GetMaxIndex()-1 do
+    if GetObjectConnected(i) == 1 then
+      -- ...
+    end
+  end
+
+GetMinUserIndex() / GetMaxUserIndex() / GetMinMonsterIndex() / GetMaxMonsterIndex()
+- Pega faixas (ranges) de user/monster.
+Ex:
+  for i = GetMinUserIndex(), GetMaxUserIndex()-1 do
+    -- ...
+  end
+
+----------------------------------------
+GetObjectConnected(aIndex)
+- Verifica se o objeto está conectado.
+Ex:
+  if GetObjectConnected(aIndex) == 0 then return end
+
+GetObjectType(aIndex)
+- Pega o tipo do objeto.
+Ex:
+  local t = GetObjectType(aIndex)
+
+GetObjectLevel(aIndex)
+- Pega o level.
+Ex:
+  local lv = GetObjectLevel(aIndex)
+
+GetObjectMoney(aIndex)
+- Pega o Zen.
+Ex:
+  local zen = GetObjectMoney(aIndex)
+
+GetObjectClass(aIndex)
+- Pega a classe.
+Ex:
+  local cls = GetObjectClass(aIndex)
+
+GetObjectMap(aIndex) / GetObjectMapX(aIndex) / GetObjectMapY(aIndex)
+- Pega mapa e coordenadas.
+Ex:
+  local map = GetObjectMap(aIndex)
+  local x = GetObjectMapX(aIndex)
+  local y = GetObjectMapY(aIndex)
+
+GetObjectReset(aIndex) / GetObjectMasterReset(aIndex)
+- Pega resets.
+Ex:
+  local rr = GetObjectReset(aIndex)
+
+----------------------------------------
+LogPrint(message)
+- Escreve no log do servidor.
+Ex:
+  LogPrint("Script carregado")
+
+LogColor(color, message)
+- Escreve no log com cor (0 preto, 1 vermelho, 2 verde, 3 azul).
+Ex:
+  LogColor(2, "OK")
+
+----------------------------------------
+GetObjectStrength(aIndex) / GetObjectDexterity(aIndex) / GetObjectVitality(aIndex)
+GetObjectEnergy(aIndex) / GetObjectLeadership(aIndex)
+- Pega atributos do personagem.
+Ex:
+  local str = GetObjectStrength(aIndex)
+  local agi = GetObjectDexterity(aIndex)
+
+GetObjectLife(aIndex) / GetObjectMaxLife(aIndex)
+GetObjectMana(aIndex) / GetObjectMaxMana(aIndex)
+GetObjectBP(aIndex) / GetObjectMaxBP(aIndex)
+GetObjectShield(aIndex) / GetObjectMaxShield(aIndex)
+- Pega HP/MP/BP/SD atuais e máximos.
+Ex:
+  local hp = GetObjectLife(aIndex)
+  local maxHp = GetObjectMaxLife(aIndex)
+
+----------------------------------------
+GetObjectAccount(aIndex) / GetObjectPersonalCode(aIndex) / GetObjectAccountExpireDate(aIndex)
+- Pega strings de conta/código/expiração.
+Ex:
+  local acc = GetObjectAccount(aIndex)
+
+GetObjectAuthority(aIndex)
+- Pega autoridade (flag).
+Ex:
+  if GetObjectAuthority(aIndex) > 0 then LogPrint("Autoridade") end
+
+GetObjectPartyNumber(aIndex) / GetObjectGuildNumber(aIndex)
+- Pega party/guild.
+Ex:
+  local party = GetObjectPartyNumber(aIndex)
+
+GetObjectPKCount(aIndex) / GetObjectPKLevel(aIndex) / GetObjectPKTimer(aIndex)
+- Pega infos de PK.
+Ex:
+  local pk = GetObjectPKLevel(aIndex)
+
+GetObjectMasterLevel(aIndex) / GetObjectMasterPoint(aIndex)
+- Pega master level/points.
+Ex:
+  local ml = GetObjectMasterLevel(aIndex)
+
+----------------------------------------
+NoticeSend(aIndex, type, message)
+- Envia notice para 1 jogador.
+Ex:
+  NoticeSend(aIndex, 0, "Bem-vindo!")
+
+NoticeSendToAll(type, message)
+- Envia notice para todos do servidor.
+Ex:
+  NoticeSendToAll(0, "Evento iniciado!")
+
+NoticeGlobalSend(type, message)
+- Envia notice global (grupo).
+Ex:
+  NoticeGlobalSend(0, "Aviso global!")
+
+PostSend(aIndex, message)
+- Envia post como se fosse o player.
+Ex:
+  PostSend(aIndex, "Olá!")
+
+PostSendToAll(message)
+- Post local para todos.
+Ex:
+  PostSendToAll("Mensagem geral")
+
+GlobalPostSend(type, name, message)
+- Post global.
+Ex:
+  GlobalPostSend(0, "[EVENT]", "Drop x2")
+
+----------------------------------------
+Attack(attackerIndex, targetIndex)
+- Faz um ataque normal.
+Ex:
+  local mob = FindNearestMonster(aIndex, 8)
+  if mob ~= -1 then Attack(aIndex, mob) end
+
+AttackSkill(attackerIndex, targetIndex, skillNumber)
+- Faz ataque usando skill.
+Ex:
+  AttackSkill(aIndex, mob, 9)
+
+GetCommandCode(label)
+- Pega o código de um comando.
+Ex:
+  local code = GetCommandCode("/post")
+
+GetCommandNumber(argString, pos) / GetCommandString(argString, pos)
+- Lê argumentos de uma string.
+Ex:
+  local n = GetCommandNumber("/add 10", 1)
+  local s = GetCommandString("/move lorencia", 1)
+
+GetTickCount()
+- Pega tick do Windows.
+Ex:
+  local now = GetTickCount()
+
+GetDistance(aIndex, bIndex)
+- Pega distância entre 2 objetos.
+Ex:
+  local d = GetDistance(aIndex, mob)
+
+FindNearestMonster(aIndex, maxDistance)
+- Acha o monstro mais próximo no viewport.
+Ex:
+  local mob = FindNearestMonster(aIndex, 10)
+
+----------------------------------------
+GetObjectEffectOption(aIndex)
+- Pega uma tabela com vários bônus (EffectOption).
+Ex:
+  local e = GetObjectEffectOption(aIndex)
+  if e then LogPrint("AddDefense=" .. e.AddDefense) end
+
+GetObjectEffectOptionValue(aIndex, fieldName)
+- Pega 1 campo do EffectOption pelo nome.
+Ex:
+  local addHp = GetObjectEffectOptionValue(aIndex, "AddMaxHP")
+
+GetObjectEffectAddAttackSuccessRate(aIndex) / GetObjectEffectAddDefense(aIndex)
+GetObjectEffectAddMaxHP(aIndex) / GetObjectEffectAddExperienceRate(aIndex) / GetObjectEffectAddItemDropRate(aIndex)
+- Pega alguns bônus direto.
+Ex:
+  local drop = GetObjectEffectAddItemDropRate(aIndex)
+
+----------------------------------------
+EventStartBegin(aIndex, ...nums)
+- Inicia o EventStart (se estiver ligado no servidor).
+Ex:
+  local ok = EventStartBegin(aIndex, 1, 2, 3)
+
+EventStartCancel()
+- Cancela o EventStart.
+Ex:
+  EventStartCancel()
+
+EventQuicklyBegin(aIndex, ...nums)
+- Inicia o QuicklyEvent.
+Ex:
+  EventQuicklyBegin(aIndex, 1)
+
+EventFindPathBegin()
+- Inicia o FindPath (se compilado).
+Ex:
+  EventFindPathBegin()
+
+----------------------------------------
+UserTeleport(aIndex, map, x, y)
+- Teleporta o jogador.
+Ex:
+  UserTeleport(aIndex, 0, 125, 125)
+
+UserMoveGate(aIndex, gate)
+- Move o jogador para um gate.
+Ex:
+  UserMoveGate(aIndex, 17)
+
+UserAddMoney(aIndex, amount) / UserSetMoney(aIndex, amount)
+- Adiciona ou seta Zen.
+Ex:
+  UserAddMoney(aIndex, 1000000)
+
+UserAddCoin(aIndex, coinType, amount)
+- Adiciona coin (1..3).
+Ex:
+  UserAddCoin(aIndex, 1, 100)
+
+UserGetMap(aIndex) / UserGetX(aIndex) / UserGetY(aIndex)
+- Pega posição do jogador.
+Ex:
+  local map = UserGetMap(aIndex)
+
+UserDisconnect(aIndex)
+- Desconecta o jogador.
+Ex:
+  UserDisconnect(aIndex)
+
+UserGetName(aIndex) / UserGetAccount(aIndex)
+- Pega nome/conta do jogador.
+Ex:
+  LogPrint(UserGetName(aIndex))
+
+UserSetPK(aIndex, pkLevel, pkTime, pkCount)
+- Ajusta PK.
+Ex:
+  UserSetPK(aIndex, 6, 60, 1)
+
+UserRestoreHP(aIndex, amount) / UserRestoreMP(aIndex, amount)
+UserRestoreSD(aIndex, amount) / UserRestoreBP(aIndex, amount)
+- Restaura (ou reduz, se negativo) HP/MP/SD/BP.
+Ex:
+  UserRestoreHP(aIndex, 500)
+
+CommandSend(aIndex, commandString)
+- Executa um comando como se fosse o player.
+Ex:
+  CommandSend(aIndex, "/post Hello")
+
+----------------------------------------
+LuaGetObjectDeathMap(aIndex) / LuaGetObjectDeathMapX(aIndex) / LuaGetObjectDeathMapY(aIndex)
+- Pega mapa/X/Y (fallback: posição atual).
+Ex:
+  local m = LuaGetObjectDeathMap(aIndex)
+
+LuaGetObjectGuildNumber(aIndex) / LuaGetObjectGuildStatus(aIndex) / LuaGetObjectGuildName(aIndex)
+LuaGetObjectGuildRelationship(aIndex, bIndex)
+LuaGetObjectGuildUnionNumber(aIndex) / LuaGetObjectGuildUnionName(aIndex)
+- Helpers de guild/union.
+Ex:
+  local rel = LuaGetObjectGuildRelationship(aIndex, bIndex)
+
+----------------------------------------
+MoveUser(aIndex, gate)
+- Move o player via gate (regras do servidor).
+Ex:
+  MoveUser(aIndex, 17)
+
+MoveUserEx(aIndex, map, x, y)
+- Teleporte direto.
+Ex:
+  MoveUserEx(aIndex, 0, 125, 125)
+
+UserCalcAttribute(aIndex)
+- Recalcula atributos.
+Ex:
+  UserCalcAttribute(aIndex)
+
+UserInfoSend(aIndex)
+- Reenvia infos/atualiza personagem.
+Ex:
+  UserInfoSend(aIndex)
+
+UserActionSend(aIndex, bIndex, action)
+- Envia ação (anim/ação).
+Ex:
+  UserActionSend(aIndex, bIndex, 1)
+
+UserSetAccountLevel(aIndex, aValue, bValue)
+- Ajusta account level.
+Ex:
+  UserSetAccountLevel(aIndex, 1, 0)
+
+----------------------------------------
+ObjectGetCoin(aIndex)
+- Pega coins em tabela.
+Ex:
+  local c = ObjectGetCoin(aIndex)
+  LogPrint("Coin1=" .. c.Coin1)
+
+ObjectAddCoin(aIndex, coin1, coin2, coin3)
+- Adiciona coins.
+Ex:
+  ObjectAddCoin(aIndex, 10, 0, 0)
+
+ObjectSubCoin(aIndex, coin1, coin2, coin3)
+- Remove coins.
+Ex:
+  ObjectSubCoin(aIndex, 1, 0, 0)
+
+PermissionCheck(aIndex, permissionIndex)
+- Checa permissão (0..49).
+Ex:
+  if PermissionCheck(aIndex, 10) == 1 then LogPrint("Permitido") end
+
+PermissionInsert(aIndex, permissionIndex)
+- Liga uma permissão.
+Ex:
+  PermissionInsert(aIndex, 10)
+
+PermissionRemove(aIndex, permissionIndex)
+- Desliga uma permissão.
+Ex:
+  PermissionRemove(aIndex, 10)
+
+----------------------------------------
+ItemDrop(aIndex, map, x, y, specialValue)
+- Dropa um item do ItemBag pelo specialValue.
+Ex:
+  ItemDrop(aIndex, UserGetMap(aIndex), UserGetX(aIndex), UserGetY(aIndex), 1)
+
+ItemDropEx(aIndex, map, x, y, itemIndex, level, dur, opt1, opt2, opt3, ...)
+- Dropa item com parâmetros.
+Ex:
+  -- Exemplo mínimo (complete os ... conforme seu drop)
+  ItemDropEx(aIndex, 0, 125, 125, 0, 0, 0, 0, 0, 0, 0)
+
+ItemGive(aIndex, specialValue)
+- Dá um item do ItemBag pelo specialValue.
+Ex:
+  ItemGive(aIndex, 1)
+
+ItemGiveEx(aIndex, itemIndex, level, dur, opt1, opt2, opt3, newOpt, ...)
+- Dá item com parâmetros.
+Ex:
+  -- Exemplo mínimo (complete os ... conforme seu item)
+  ItemGiveEx(aIndex, 0, 0, 0, 0, 0, 0, 0)
+
+LevelUpSend(aIndex)
+- Envia efeito/atualização de level up.
+Ex:
+  LevelUpSend(aIndex)
